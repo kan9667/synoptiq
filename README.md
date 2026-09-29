@@ -66,7 +66,7 @@ Built by **HackTastic 6ix** for Smart India Hackathon 2026 · Problem Statement 
 - **Organisation:** Ministry of Earth Sciences (MoES)
 - **Category:** Software
 - **Theme:** Smart Automation
-- **Team:** HackTastic 6ix (Team ID 67)
+- **Team:** HackTastic 6ix (Team ID - 178497 )
 
 ---
 
