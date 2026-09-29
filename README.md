@@ -18,7 +18,7 @@ Built by **HackTastic 6ix** for Smart India Hackathon 2026 · Problem Statement 
 [![SIH 2026](https://img.shields.io/badge/SIH%202026-SIH26079-brightgreen)](#1-project-information)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[Project Handoff](docs/SYNOPTIQ_COMPLETE_HANDOFF.md) · [Canonical Reference](docs/SIH-26079-Forecast-Bust-Detection-Canonical-Reference.md) · [Results](docs/results.md) · [Data Audit](docs/data_audit.md)
+[Project Reference](docs/SYNOPTIQ.md) · [Architecture & Science](docs/SYNOPTIQ.md#7-architecture-and-technology) · [Evaluation Results](docs/SYNOPTIQ.md#9-recorded-evaluation) · [Audit & Verification](docs/SYNOPTIQ.md#5-time-alignment-and-spatial-coverage)
 
 </div>
 
@@ -142,7 +142,7 @@ IMD date label D      →  [D − 1 day 03:00Z, D 03:00Z)
 GEFS 00 UTC, lead L   →  [init + (24L − 21) h, init + (24L + 3) h)
 ```
 
-The mapping was hand-checked on real files. At 20°N, 78°E for the 2018-08-01 run, eight 3-hour GEFS slices sum to 8.24 mm, and the repository's `exact_24h_total` returns the same 8.24 mm ([docs/data_audit.md](docs/data_audit.md)).
+The mapping was hand-checked on real files. At 20°N, 78°E for the 2018-08-01 run, eight 3-hour GEFS slices sum to 8.24 mm, and the repository's `exact_24h_total` returns the same 8.24 mm ([docs/SYNOPTIQ.md §5](docs/SYNOPTIQ.md#5-time-alignment-and-spatial-coverage)).
 
 **Day 10 is unavailable.** Its window needs the +240→+243 h amount, but past +240 h the archive switches to a single +240→+246 h step. Splitting that step would be a guess, so Day 10 returns explicit no-data rather than an approximation (decision D-005).
 
@@ -156,7 +156,7 @@ The fixed 2° grid has **112** regions that intersect India's land area. Each fu
 
 ### Current status
 
-The historical-data pipeline, trained candidate model, held-out evaluation, and real replay dashboard are complete (roadmap Phases 1–3, tag `e2e-v1`; see [docs/AGENTS.md](docs/AGENTS.md#submission-roadmap)).
+The historical-data pipeline, trained candidate model, held-out evaluation, and real replay dashboard are complete (roadmap Phases 1–3, tag `e2e-v1`; see [docs/SYNOPTIQ.md §13](docs/SYNOPTIQ.md#13-development-history-and-completion-status)).
 
 | | |
 | --- | --- |
@@ -187,7 +187,7 @@ The calibrated candidate cuts the Brier score by about **30.1%** compared with c
 - Ablations of the analog and physical feature groups.
 - Week-block bootstrap intervals.
 
-If a model does not beat climatology, that result is reported rather than hidden. Full details: [docs/results.md](docs/results.md).
+If a model does not beat climatology, that result is reported rather than hidden. Full details: [docs/SYNOPTIQ.md §9](docs/SYNOPTIQ.md#9-recorded-evaluation).
 
 ---
 
@@ -282,16 +282,16 @@ Every downloaded file's source key, checksum, size and decoded metadata is recor
 - Do not commit raw datasets, credentials, or absolute data paths.
 - Use `DATA_DIR` to point at local data storage (defaults to `data/`). See [.env.example](.env.example).
 - The frozen target is regional 24-hour rain error, with train-only thresholds and explicit UTC verification windows.
-- Day 10 is unavailable: the audited target requires a +240–+243-hour amount, while the inspected archive supplies +240–+246 hours. See [docs/data_audit.md](docs/data_audit.md); do not present a Day-10 value as exact without a new approved audit.
+- Day 10 is unavailable: the audited target requires a +240–+243-hour amount, while the inspected archive supplies +240–+246 hours. See [docs/SYNOPTIQ.md §5](docs/SYNOPTIQ.md#5-time-alignment-and-spatial-coverage); do not present a Day-10 value as exact without a new approved audit.
 - Thresholds, climatology, the analog library and calibration use only their permitted earlier periods; the 2018–19 test years are never used for fitting or tuning.
-- Any change to source, time window, split, threshold, region grid, or feature policy needs a dated entry in [docs/DECISIONS.md](docs/DECISIONS.md). See also [DATA_MANIFEST.csv](DATA_MANIFEST.csv) and [RUN_LOG.md](docs/RUN_LOG.md) for change control.
+- Any change to source, time window, split, threshold, region grid, or feature policy needs a dated entry in [docs/SYNOPTIQ.md §13](docs/SYNOPTIQ.md#13-development-history-and-completion-status). See also [DATA_MANIFEST.csv](DATA_MANIFEST.csv) and [docs/SYNOPTIQ.md §14](docs/SYNOPTIQ.md#14-quality-reproducibility-and-release) for change control.
 - Explanations are **model-score evidence**, not proven meteorological causes. Analog cases are always strictly earlier than the forecast being scored.
 
 ---
 
 ## 10. Repository Structure
 
-`src/bust/` contains the data, feature, model, and API packages. `data/fixtures/` is the only committed data directory. The implementation plan and canonical research reference are retained in `docs/` as the source planning record.
+`src/bust/` contains the data, feature, model, and API packages. `data/fixtures/` is the only committed data directory. Research, decisions, audit evidence, results, and the implementation roadmap are consolidated in [`docs/SYNOPTIQ.md`](docs/SYNOPTIQ.md).
 
 ```text
 synoptiq/
@@ -314,7 +314,7 @@ synoptiq/
 ├── web/                     # Vite + Leaflet dashboard (offline, bundled assets)
 ├── data/fixtures/           # Committed integration fixture (raw/interim/processed are Git-ignored)
 ├── artifacts/               # Generated model, metrics and replay files (Git-ignored)
-└── docs/                    # Plans, decisions, audit, method, results, run log, handoff
+└── docs/                    # Consolidated project reference (SYNOPTIQ.md)
 ```
 
 ### What goes where?
@@ -324,17 +324,15 @@ synoptiq/
 | Data pipeline, model and API source | [`src/bust/`](src/bust/) |
 | Dashboard source | [`web/`](web/) |
 | Frozen label, split, region and explanation policies | [`config/`](config/) |
-| Complete project briefing (scope, metrics, demo case, judge Q&A) | [`docs/SYNOPTIQ_COMPLETE_HANDOFF.md`](docs/SYNOPTIQ_COMPLETE_HANDOFF.md) |
-| Original research, dataset decision and risk register | [`docs/SIH-26079-Forecast-Bust-Detection-Canonical-Reference.md`](docs/SIH-26079-Forecast-Bust-Detection-Canonical-Reference.md) |
-| Build plan, tickets and acceptance gates | [`docs/SIH-26079-72-Hour-Implementation-Plan.md`](docs/SIH-26079-72-Hour-Implementation-Plan.md) |
-| Frozen method | [`docs/method.md`](docs/method.md) |
-| Signed time-window, Day-10, region and corpus audits | [`docs/data_audit.md`](docs/data_audit.md) |
-| Baseline, validation and held-out results | [`docs/results.md`](docs/results.md) |
-| Decision log and team roster | [`docs/DECISIONS.md`](docs/DECISIONS.md) |
-| Chronological run and sign-off record | [`docs/RUN_LOG.md`](docs/RUN_LOG.md) |
-| Contributor contract and submission roadmap | [`docs/AGENTS.md`](docs/AGENTS.md) |
-| Release and second-machine checklist | [`docs/release_checklist.md`](docs/release_checklist.md) |
-| Source provenance | [`DATA_MANIFEST.csv`](DATA_MANIFEST.csv) |
+| Consolidated project reference | [`docs/SYNOPTIQ.md`](docs/SYNOPTIQ.md) |
+| Scientific definition and chronological splits | [`docs/SYNOPTIQ.md §4`](docs/SYNOPTIQ.md#4-scientific-definition) |
+| Signed time-window, Day-10 and spatial coverage audits | [`docs/SYNOPTIQ.md §5`](docs/SYNOPTIQ.md#5-time-alignment-and-spatial-coverage) |
+| Data sources, acquisition pipeline and manifests | [`docs/SYNOPTIQ.md §6`](docs/SYNOPTIQ.md#6-data-sources-and-acquisition) |
+| Model, calibration and explainability | [`docs/SYNOPTIQ.md §8`](docs/SYNOPTIQ.md#8-model-calibration-and-evidence) |
+| Baseline, validation and held-out evaluation results | [`docs/SYNOPTIQ.md §9`](docs/SYNOPTIQ.md#9-recorded-evaluation) |
+| Decision log (D-001–D-010) and milestones | [`docs/SYNOPTIQ.md §13`](docs/SYNOPTIQ.md#13-development-history-and-completion-status) |
+| Quality, reproducibility and release standards | [`docs/SYNOPTIQ.md §14`](docs/SYNOPTIQ.md#14-quality-reproducibility-and-release) |
+| Source provenance manifest | [`DATA_MANIFEST.csv`](DATA_MANIFEST.csv) |
 
 ---
 
@@ -567,7 +565,7 @@ These are intended benefits. Operational adoption would require independent vali
 - [GEFSv12 evaluation over the Indian monsoon](https://journals.ametsoc.org/view/journals/wefo/37/7/WAF-D-21-0184.1.xml), Weather and Forecasting
 - [SHAP TreeExplainer](https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html)
 
-Data are used under their providers' terms; see [docs/release_checklist.md](docs/release_checklist.md) before redistributing derived assets.
+Data are used under their providers' terms; see [docs/SYNOPTIQ.md §14](docs/SYNOPTIQ.md#14-quality-reproducibility-and-release) before redistributing derived assets.
 
 ---
 

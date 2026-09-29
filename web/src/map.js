@@ -195,10 +195,10 @@ export function createMap(containerElement, onSelectRegion, onModeChange) {
   });
   maritimeLayer.addTo(map);
 
-  // 9. Smooth Radar / Risk Heatmap Canvas Layer (Windy / Ventusky style continuous gradient)
+  // Continuous risk heatmap canvas layer (interpolated gradient)
   const heatmapEngine = createHeatmapLayer(map);
 
-  // 10. Animated Monsoon Particle Streamline Flow (Windy / Earth.nullschool style dynamic flow)
+  // Animated streamline flow layer (decorative atmospheric flow)
   const particleEngine = createParticleLayer(map);
 
   // 11. Reference Cities Layer with radar target pings
