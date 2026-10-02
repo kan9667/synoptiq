@@ -1,4 +1,21 @@
+import gzip
+import json
+
+from bust.api import store
 from bust.api.schemas import RegionResponse
+
+
+def test_store_loads_compressed_historical_replay(monkeypatch, tmp_path) -> None:
+    asset = tmp_path / "replay.json.gz"
+    with gzip.open(asset, mode="wt", encoding="utf-8") as asset_file:
+        json.dump({"data_mode": "historical_replay"}, asset_file)
+
+    monkeypatch.setenv("REPLAY_ASSET_PATH", str(asset))
+    store.load_store.cache_clear()
+    try:
+        assert store.load_store()["data_mode"] == "historical_replay"
+    finally:
+        store.load_store.cache_clear()
 
 
 def test_region_schema_preserves_optional_drilldown_provenance_fields() -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import os
 from functools import lru_cache
@@ -17,7 +18,7 @@ def load_store() -> dict:
     path = Path(
         os.getenv(
             "REPLAY_ASSET_PATH",
-            _project_root() / "artifacts/replay/reduced_c00_replay.json",
+            _project_root() / "artifacts/replay/reduced_c00_replay.json.gz",
         )
     )
     if not path.exists():
@@ -25,7 +26,11 @@ def load_store() -> dict:
             f"Historical replay asset not found: {path}. "
             "Generate it with `make replay` or set REPLAY_ASSET_PATH."
         )
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    if path.suffix == ".gz":
+        with gzip.open(path, mode="rt", encoding="utf-8") as asset_file:
+            payload = json.load(asset_file)
+    else:
+        payload = json.loads(path.read_text(encoding="utf-8"))
     if payload.get("data_mode") != "historical_replay":
         raise ValueError("REPLAY_ASSET_PATH must point to a historical replay asset.")
     return payload

@@ -376,11 +376,11 @@ make api
 - Interactive API docs: `http://127.0.0.1:8000/docs`
 - Contract check: `make smoke` (runs in-process; the server does not need to be running)
 
-The real model, metrics and replay files are generated locally and Git-ignored. The replay needs `artifacts/replay/reduced_c00_replay.json` (about 15 MB) and its metadata file. You can generate them with the pipeline below, or get a copy from the team; the raw corpus is not needed just to serve them.
+The repository includes the reviewed compressed historical replay bundle at `artifacts/replay/reduced_c00_replay.json.gz` (about 423 KB) and its metadata. No raw training corpus is needed to run it: clone the repository, install dependencies, build the dashboard, and start the API.
 
 ```bash
 source .venv/bin/activate
-REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json API_PORT=8001 make api
+REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json.gz API_PORT=8001 make api
 ```
 
 Open `http://127.0.0.1:8001/` and confirm that `/health` reports `data_mode=historical_replay`. The replay covers three held-out initialization dates (**2018-01-01**, **2019-01-01**, **2019-12-31**), which is 3,360 region/lead records.

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "data_mode": "historical_replay",
+  "model": "reduced_c00_only_candidate",
+  "selection_rule": "first, chronological-middle, and last available held-out initialization dates; availability only",
+  "selected_inits": [
+    "2018-01-01",
+    "2019-01-01",
+    "2019-12-31"
+  ],
+  "row_count": 3360,
+  "feature_count": 3360,
+  "manifest_id": "manifest-fp-12803f75af61",
+  "booster_sha256": "7428cfb384986c82ac09d1d0edd72762289bcdda597935b5c45d54f4b8f9170b",
+  "git_commit": "356f599",
+  "split": "2010-2015/2016-2017/2018-2019",
+  "seed": 42,
+  "calibration": "validation_only_sigmoid_platt",
+  "deferred_feature_groups": [
+    "moisture",
+    "circulation",
+    "ensemble_disagreement"
+  ],
+  "replay_output": "/Users/kanishka/Developer/bust detector/artifacts/replay/reduced_c00_replay.json"
+}

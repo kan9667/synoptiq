@@ -22,7 +22,7 @@ build/
 node_modules/
 web/dist/
 
-# Large/generated project data (fixtures are intentionally versioned)
+# Large/generated project data
 data/raw/**
 data/interim/**
 data/processed/**
@@ -35,6 +35,9 @@ artifacts/replay/**
 !artifacts/model/.gitkeep
 !artifacts/metrics/.gitkeep
 !artifacts/replay/.gitkeep
+# The small, reviewed compressed replay bundle makes a clone runnable.
+!artifacts/replay/reduced_c00_replay.json.gz
+!artifacts/replay/reduced_c00_replay_metadata.json
 
 # Submission media: keep editable source and small permitted release assets only.
 # Raw recordings belong in external storage; commit a link or a compressed, reviewed
