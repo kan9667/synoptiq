@@ -29,7 +29,7 @@ of new forecasts.
 
 ## The dashboard
 
-![Synoptiq historical replay dashboard showing the regional bust-risk map and evidence panel](assets/screenshots/dashboard-historical-replay.png)
+![Synoptiq historical replay dashboard showing the regional bust-risk map and evidence panel](https://github.com/kan9667/synoptiq/blob/main/assets/screenshots/dashboard-historical-replay.png?raw=true)
 
 *Synoptiq presents a regional bust-risk map alongside the selected region’s
 probability, evidence, verification window, and forecast context.*
