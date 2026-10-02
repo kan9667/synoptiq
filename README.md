@@ -65,6 +65,29 @@ absolute forecast error larger than a threshold learned from earlier years for
 the same region, season, and lead range. Observations are used only for
 historical verification, never as an input to the forecast-time score.
 
+## Architecture
+
+The replay is designed as a traceable chain from archived forecasts to an
+interpretable regional result. Each served score retains its model, timing, and
+source context.
+
+```mermaid
+flowchart LR
+    A[GEFSv12 historical<br/>forecast fields] --> C[Alignment and regional<br/>rainfall features]
+    B[IMD gridded rainfall<br/>observations] --> C
+    C --> D[Chronological training<br/>and calibration]
+    D --> E[Frozen historical<br/>replay artifact]
+    E --> F[Read-only API]
+    F --> G[Interactive map and<br/>regional evidence]
+
+    H[Earlier comparable<br/>forecast cases] --> G
+    I[Source keys and<br/>UTC windows] --> G
+```
+
+The model is trained only on earlier periods. Once a forecast’s verification
+window has ended, the matching IMD observation is used to assess the replayed
+forecast—not to influence the score that was available at issue time.
+
 ## Results in this replay
 
 The current reduced LightGBM model was evaluated on untouched 2018–2019 data:
@@ -106,9 +129,33 @@ rebuild the training dataset or generate a new replay. See
 - Its current model uses the c00 control member only.
 - Scores are defined for regional rainfall forecast error, not impact or safety.
 
+## Conclusion and impact
+
+Synoptiq turns a broad archive of historical rainfall forecasts into a focused
+question: *where should a forecaster look more closely?* Rather than presenting
+certainty where none exists, it makes forecast reliability visible at the
+regional level and accompanies each result with its evidence, comparable prior
+cases, and provenance.
+
+The project demonstrates a practical foundation for auditable forecast-quality
+review in India. Its value lies in helping a reviewer prioritise attention,
+understand uncertainty, and inspect the basis for a flagged result. It is a
+research prototype, not a replacement for professional meteorological
+judgement or an operational warning system.
+
 ## Team
 
-HackTastic 6ix — Smart India Hackathon 2026, Problem Statement SIH26079.
+Synoptiq was built by **HackTastic 6ix** for Smart India Hackathon 2026,
+Problem Statement SIH26079.
+
+| Team member | Contribution |
+| --- | --- |
+| **Kanishka Pandey** | Data lead: GEFS inventory, acquisition, decoding, accumulation audit, and source provenance. |
+| **Aanya Varshney** | Verification lead: IMD decoding, land-region coverage, and rainfall labels. |
+| **Rudraksh Saini** | Machine-learning lead: baselines, model training, calibration, and evaluation. |
+| **Dhruv Makkar** | Features and explainability lead: issue-time features, analog retrieval, and model evidence. |
+| **Aadi Jain** | Product lead: API, dashboard, and offline replay bundle. |
+| **Triman Singh Chadha** | Integration and communications lead: acceptance, storyboard, presentation, and submission package. |
 
 For source details, model design, evaluation records, and references, see the
 [project reference](docs/SYNOPTIQ.md).
