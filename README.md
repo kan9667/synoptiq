@@ -66,6 +66,38 @@ make api
 Open http://127.0.0.1:8000/ in a browser. The API documentation is available
 at http://127.0.0.1:8000/docs.
 
+### Windows
+
+`source .venv/bin/activate` and `make` are not available natively on Windows.
+Use one of the following approaches:
+
+**Option A — WSL (recommended):** run all commands above unchanged inside a
+WSL terminal.
+
+**Option B — Git Bash / native Python:**
+
+~~~powershell
+git clone https://github.com/kan9667/synoptiq.git
+cd synoptiq
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e ".[dev]"
+python scripts/build_web.py
+python scripts/serve.py
+~~~
+
+**Option C — conda (also resolves `eccodes`/`cfgrib` on Windows):**
+
+~~~powershell
+conda env create -f environment.yml
+conda activate synoptiq
+python scripts/build_web.py
+python scripts/serve.py
+~~~
+
+> `eccodes` and `cfgrib` have no official pip wheel for Windows. If you see
+> install errors with Options A or B, use Option C (conda) instead.
+
 ## How to read a bust-risk result
 
 A high probability does not mean heavy rain or a weather warning. It means the
