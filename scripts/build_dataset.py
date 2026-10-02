@@ -41,7 +41,7 @@ def main() -> None:
     if not report.is_complete:
         print(f"⚠️ Blocked — D1-07: {report.blocking_reason}")
         print(f"Next safe action: {report.next_safe_action}")
-        print("Never construct rows.parquet from fixtures, pilots, incomplete years, invented dates, or substituted sources.")
+        print("Never construct rows.parquet from pilots, incomplete years, invented dates, or substituted sources.")
         sys.exit(1)
 
     # Real build pipeline (executes only when full 2010-2019 corpus is complete):

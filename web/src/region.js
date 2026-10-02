@@ -164,7 +164,7 @@ export function renderRegion(panel, { regionData, fallbackProperties, lead, lead
   const reasons = isDay10 ? [] : (regionData?.reasons || []);
   const caveats = regionData?.caveats || [];
   const provenance = formatProvenance(regionData?.provenance || fallbackProperties?.provenance);
-  const dataMode = regionData?.data_mode || fallbackProperties?.data_mode || "fixture";
+  const dataMode = regionData?.data_mode || fallbackProperties?.data_mode || "historical_replay";
   const validStartUtc = isDay10 ? null : (regionData?.valid_start_utc || fallbackProperties?.valid_start_utc);
   const validEndUtc = isDay10 ? null : (regionData?.valid_end_utc || fallbackProperties?.valid_end_utc);
   const sourceKey = regionData?.source_key || fallbackProperties?.source_key || null;
@@ -173,8 +173,6 @@ export function renderRegion(panel, { regionData, fallbackProperties, lead, lead
   const isPeripheral = coverageFraction !== null && coverageFraction !== undefined && Number(coverageFraction) < 0.80;
   const analogs = isDay10 ? [] : (Array.isArray(regionData?.analogs) ? regionData.analogs : []);
 
-  const isFixtureEvidence =
-    dataMode === "fixture" || reasons.some((r) => r.evidence_layer === "fixture");
   const topReason = getTopScoreReason(reasons);
   const apiPreview = {
     data_mode: dataMode,
@@ -244,7 +242,6 @@ export function renderRegion(panel, { regionData, fallbackProperties, lead, lead
           const isIncrease = r.direction?.toLowerCase().includes("increase");
           const dirClass = isIncrease ? "dir-increase" : "dir-decrease";
           const dirIcon = isIncrease ? "▲" : "▼";
-          const isFixtureLayer = r.evidence_layer === "fixture";
 
           return `
                 <div class="reason-card">
@@ -258,7 +255,7 @@ export function renderRegion(panel, { regionData, fallbackProperties, lead, lead
                     <span class="val-label">Score contribution:</span>
                     <span class="val-num">${escapeHtml(formatScoreContribution(r))}</span>
                     <span class="reason-layer-badge">
-                      ${isFixtureLayer ? "fixture (illustrative only — no model claim)" : escapeHtml(r.evidence_layer)}
+                      ${escapeHtml(r.evidence_layer)}
                     </span>
                   </div>
                   <div class="reason-caption">${escapeHtml(r.caption)}</div>
@@ -456,9 +453,7 @@ export function renderRegion(panel, { regionData, fallbackProperties, lead, lead
           <span class="evidence-tag">LightGBM Attribution</span>
         </div>
         <div class="shap-disclaimer">
-          ${isFixtureEvidence
-      ? "⚠️ Illustrative fixture example only: this reason payload is an integration test fixture and makes no model or meteorological claim."
-      : isDay10
+          ${isDay10
         ? "⚠️ Day 10 scoring is unavailable. No diagnostic feature contributions are generated."
         : "🔬 Feature Attribution (LightGBM Score Evidence): Values reflect saved gradient boosted tree score contributions for active features (Rain, Region, Season, Lead). These represent model sensitivities, NOT proven meteorological causal mechanisms."
     }

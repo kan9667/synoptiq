@@ -169,7 +169,7 @@ def test_config_regions_geojson_is_valid_and_deterministic() -> None:
     assert len(all_regions) == 112
     assert len(supported_regions) == 65
 
-    # Check fixture regions exist in supported set
+    # Check expected regions exist in supported set
     supp_ids = {r.region_id for r in supported_regions}
     assert {"R20N-078E", "R22N-080E", "R24N-076E"}.issubset(supp_ids)
 

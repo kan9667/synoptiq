@@ -43,7 +43,7 @@ export function normalizeReplayFeature(feature) {
 export function normalizeReplay(payload) {
   return {
     ...payload,
-    data_mode: payload?.data_mode || "fixture",
+    data_mode: payload?.data_mode || "historical_replay",
     model: payload?.model || "not supplied",
     truth_source: payload?.truth_source || "not supplied",
     features: Array.isArray(payload?.features)

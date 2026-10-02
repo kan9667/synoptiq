@@ -420,19 +420,18 @@ def test_replace_final_flag_required(tmp_path: Path, monkeypatch) -> None:
         )
 
 
-def test_no_fixture_in_streaming_pipeline() -> None:
-    """Fixture records or guessed keys cannot satisfy inventory."""
-    # XML parser must reject non-.grib2 or fixture paths
-    sample_fixture_xml = b"""
+def test_non_grib_records_cannot_satisfy_inventory() -> None:
+    """Non-GRIB records or guessed keys cannot satisfy inventory."""
+    sample_invalid_xml = b"""
     <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
         <Contents>
-            <Key>data/fixtures/replay_contract.json</Key>
+            <Key>data/invalid/replay_contract.json</Key>
             <Size>1000</Size>
             <ETag>"dummy"</ETag>
         </Contents>
     </ListBucketResult>
     """
-    parsed = parse_s3_xml_for_c00(sample_fixture_xml, "2018-08-01")
+    parsed = parse_s3_xml_for_c00(sample_invalid_xml, "2018-08-01")
     assert parsed is None
 
 
@@ -1894,7 +1893,6 @@ def test_sync_manifest_with_streaming_corpus(tmp_path: Path) -> None:
     manifest_file = tmp_path / "DATA_MANIFEST.csv"
     initial_content = (
         "manifest_id,source,provider,object_key_or_url,retrieved_utc,sha256,bytes,init_utc,variable,member,step_start_h,step_end_h,units,status,notes\n"
-        "fixture-v1,fixture,repository,data/fixtures/replay_contract.json,,,,2018-08-01T00:00:00Z,illustrative,,,,,fixture,Not source data\n"
         "imd-2018-pilot,imd,IMD Pune,https://example.com/2018,2026-09-26T19:38:43Z,abc,25431832,,RAINFALL,,,,mm,decoded,verified\n"
         "gefs-20180801-c00-apcp,gefs,NOAA GEFSv12 reforecast,key_old,2026-09-27T06:26:11Z,sha_old,28987248,2018-08-01T00:00:00Z,apcp_sfc,c00,0,240,kg m**-2,decoded,existing verified pilot note\n"
         "gefs-20180801-p01-apcp,gefs,NOAA GEFSv12 reforecast,key_p01,,sha_p01,23839440,2018-08-01T00:00:00Z,apcp_sfc,p01,0,240,kg m**-2,decoded,member 1\n"
@@ -1931,17 +1929,17 @@ def test_sync_manifest_with_streaming_corpus(tmp_path: Path) -> None:
     assert synced == 2
 
     lines = [l for l in manifest_file.read_text(encoding="utf-8").splitlines() if l.strip()]
-    # Total lines: header (1) + fixture (1) + imd (1) + gefs-20180801-c00 (1) + p01 (1) + gefs-20100101-c00 (1) = 6
-    assert len(lines) == 6
+    # Total lines: header (1) + imd (1) + gefs-20180801-c00 (1) + p01 (1) + gefs-20100101-c00 (1) = 5
+    assert len(lines) == 5
 
     # Verify 2018-08-01 pilot row was updated in place and preserved existing notes
-    pilot_line = lines[3]
+    pilot_line = lines[2]
     assert "gefs-20180801-c00-apcp" in pilot_line
     assert "existing verified pilot note" in pilot_line
     assert "sha_20180801_verified" in pilot_line
 
     # Verify 2010-01-01 new row was appended with full factual metadata
-    new_line = lines[5]
+    new_line = lines[4]
     assert "gefs-20100101-c00-apcp" in new_line
     assert "2010-01-01T00:00:00Z" in new_line
     assert "sha_20100101" in new_line
@@ -1953,4 +1951,4 @@ def test_sync_manifest_with_streaming_corpus(tmp_path: Path) -> None:
     synced_2 = sync_manifest_with_streaming_corpus(manifest_file, state)
     assert synced_2 == 2
     lines_2 = [l for l in manifest_file.read_text(encoding="utf-8").splitlines() if l.strip()]
-    assert len(lines_2) == 6
+    assert len(lines_2) == 5

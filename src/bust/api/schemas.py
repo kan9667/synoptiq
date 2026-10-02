@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 class HealthResponse(BaseModel):
     status: Literal["ok"] = "ok"
-    data_mode: Literal["fixture", "historical_replay"]
+    data_mode: Literal["historical_replay"]
 
 
 class FeatureProperties(BaseModel):
@@ -31,7 +31,7 @@ class ReplayFeature(BaseModel):
 
 class ReplayResponse(BaseModel):
     type: Literal["FeatureCollection"]
-    data_mode: Literal["fixture", "historical_replay"]
+    data_mode: Literal["historical_replay"]
     model: str
     truth_source: str
     features: list[ReplayFeature]
@@ -57,7 +57,7 @@ class RegionResponse(BaseModel):
     observed_mm: float | None
     threshold_mm: float | None
     window_quality: Literal["exact", "approximate", "unavailable"]
-    data_mode: Literal["fixture", "historical_replay"]
+    data_mode: Literal["historical_replay"]
     provenance: str
     valid_start_utc: str | None = None
     valid_end_utc: str | None = None
@@ -72,7 +72,7 @@ class RegionResponse(BaseModel):
 
 
 class EvaluationResponse(BaseModel):
-    data_mode: Literal["fixture", "historical_replay"]
+    data_mode: Literal["historical_replay"]
     status: str
     message: str
     metrics: dict[str, Any] | None

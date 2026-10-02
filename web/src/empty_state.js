@@ -24,7 +24,7 @@ export function renderMapEmptyState(container, { lead, title, message, onReset }
         <h3 class="empty-title">${escapeHtml(title ?? `Replay Unavailable: Day ${lead}`)}</h3>
         <p class="empty-message">${escapeHtml(
           message ??
-            `The current fixture asset only defines integration data for Day 1 and Day 10. Per project rules, missing lead data is never fabricated.`
+            `No historical replay is available for this lead. Missing results are never fabricated.`
         )}</p>
         <div class="empty-actions">
           <button type="button" class="btn-reset" id="empty-reset-day1">

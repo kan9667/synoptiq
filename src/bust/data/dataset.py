@@ -156,7 +156,7 @@ def check_corpus_coverage(
     - Compares sets of valid in-scope dates, rejecting duplicate or out-of-range dates.
     - Derives required IMD annual years from Day 1-9 verification labels (requiring 2010–2020, with 2020 verification-only).
     - Requires real manifest evidence from DATA_MANIFEST.csv with observed decoded metadata.
-    - Never construct rows.parquet from fixtures, pilots, incomplete years, invented dates, or substituted sources.
+    - Never construct rows.parquet from pilots, incomplete years, invented dates, or substituted sources.
     - If any required year or archive object is missing, blocks dataset construction.
     """
     root = Path(__file__).resolve().parents[3]

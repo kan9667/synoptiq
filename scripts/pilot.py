@@ -36,7 +36,7 @@ def main() -> None:
     print("status=blocked")
     print(f"decoded_gefs_c00_records={len(gefs_c00)}")
     print(f"decoded_imd_records={len(imd)}")
-    print("reason=Required real GEFSv12/IMD pilot evidence is incomplete; fixture mode remains active.")
+    print("reason=Required real GEFSv12/IMD pilot evidence is incomplete; no replay is available.")
 
 
 if __name__ == "__main__":

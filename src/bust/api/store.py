@@ -1,4 +1,4 @@
-"""File-backed source of replay assets; default fixture is intentionally safe."""
+"""File-backed source of generated historical replay assets."""
 
 from __future__ import annotations
 
@@ -14,15 +14,21 @@ def _project_root() -> Path:
 
 @lru_cache(maxsize=1)
 def load_store() -> dict:
-    if os.getenv("SYNOPTIQ_DEMO_MODE") == "1":
-        from bust.api.demo_fixture import build_demo_store
-
-        return build_demo_store()
-
-    path = Path(os.getenv("REPLAY_ASSET_PATH", _project_root() / "data/fixtures/replay_contract.json"))
+    path = Path(
+        os.getenv(
+            "REPLAY_ASSET_PATH",
+            _project_root() / "artifacts/replay/reduced_c00_replay.json",
+        )
+    )
     if not path.exists():
-        raise FileNotFoundError(f"Replay asset not found: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
+        raise FileNotFoundError(
+            f"Historical replay asset not found: {path}. "
+            "Generate it with `make replay` or set REPLAY_ASSET_PATH."
+        )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("data_mode") != "historical_replay":
+        raise ValueError("REPLAY_ASSET_PATH must point to a historical replay asset.")
+    return payload
 
 
 def available_inits() -> list[str]:

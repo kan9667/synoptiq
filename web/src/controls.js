@@ -240,7 +240,7 @@ export function setupControls(
         }
       }
     },
-    updateLegend(mode, dataMode = "fixture", tierCounts = null) {
+    updateLegend(mode, dataMode = "historical_replay", tierCounts = null) {
       const legendContainer = container.querySelector("#dock-legend-container");
       if (legendContainer) renderLegend(legendContainer, mode, dataMode, tierCounts);
     },

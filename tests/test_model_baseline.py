@@ -168,7 +168,7 @@ def test_refuses_to_overwrite_existing_artifacts_without_replace(tmp_path: Path)
     pq.write_table(table, dataset_file)
 
     manifest_file = tmp_path / "DATA_MANIFEST.csv"
-    manifest_file.write_text("manifest_id,source,status\nfixture-v1,fixture,decoded\n", encoding="utf-8")
+    manifest_file.write_text("manifest_id,source,status\nexample-v1,example,decoded\n", encoding="utf-8")
 
     # First run succeeds and creates artifacts
     res = run_climatology_baseline_pipeline(
@@ -283,7 +283,7 @@ def test_pipeline_spread_readiness_parquet_schema_inspection(tmp_path: Path) -> 
     import json
 
     manifest_file = tmp_path / "DATA_MANIFEST.csv"
-    manifest_file.write_text("manifest_id,source,status\nfixture-v1,fixture,decoded\n", encoding="utf-8")
+    manifest_file.write_text("manifest_id,source,status\nexample-v1,example,decoded\n", encoding="utf-8")
 
     # Scenario A: Parquet without rain_member_std -> blocked_missing_features
     df_no_spread = _rows()

@@ -163,7 +163,6 @@ def test_real_export_and_api_contract_when_local_artifacts_exist(tmp_path: Path,
     assert {feature["properties"]["tier"] for feature in day_ten["features"]} == {"no_data"}
     assert {feature["properties"]["f_control_mm"] for feature in day_ten["features"]} == {None}
 
-    monkeypatch.delenv("SYNOPTIQ_DEMO_MODE", raising=False)
     monkeypatch.setenv("REPLAY_ASSET_PATH", str(output))
     store.load_store.cache_clear()
     try:

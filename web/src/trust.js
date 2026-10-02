@@ -63,9 +63,9 @@ export function renderTrust(element, evaluation, { onOpenReliability } = {}) {
   const status = evaluation?.status || "insufficient_test_data";
   const message =
     evaluation?.message ||
-    "No held-out evaluation exists. Fixture values must not be interpreted as model results.";
+    "No held-out evaluation is available for this historical replay.";
   const metrics = evaluation?.metrics;
-  const dataMode = evaluation?.data_mode || "fixture";
+  const dataMode = evaluation?.data_mode || "historical_replay";
 
   const metricsHtml = renderMetrics(metrics);
 

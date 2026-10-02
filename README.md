@@ -259,7 +259,7 @@ The spread-only baseline and these feature groups are evaluated once that corpus
 
 The recorded real-data MVP uses a **reduced c00-only LightGBM candidate**, with a completed 2010–2019 forecast corpus, held-out evaluation, and a three-date historical replay. Exact Days 1–9 are supported; Day 10 and low-coverage regions remain no-data. Full ensemble/atmospheric features and final release acceptance remain outstanding; see the [project reference](docs/SYNOPTIQ.md#3-current-implementation) for scope and evidence.
 
-A fresh clone still runs in **fixture mode** by default. Real generated artifacts are Git-ignored and must be supplied separately; the [real-replay startup instructions](docs/SYNOPTIQ.md#12-repository-and-local-operation) explain how to select them. Fixture values are not model results.
+A fresh clone requires the generated historical replay asset. It is Git-ignored and must be supplied separately; the [startup instructions](docs/SYNOPTIQ.md#12-repository-and-local-operation) explain how to select it.
 
 ## 9. Data Sources
 
@@ -291,7 +291,7 @@ Every downloaded file's source key, checksum, size and decoded metadata is recor
 
 ## 10. Repository Structure
 
-`src/bust/` contains the data, feature, model, and API packages. `data/fixtures/` is the only committed data directory. The implementation plan and canonical research reference are retained in `docs/` as the source planning record.
+`src/bust/` contains the data, feature, model, and API packages. Generated replay artifacts are kept outside Git. The implementation plan and canonical research reference are retained in `docs/` as the source planning record.
 
 ```text
 synoptiq/
@@ -312,7 +312,6 @@ synoptiq/
 ├── scripts/                 # Reproducible entry points behind the make targets
 ├── tests/                   # Time-window, accumulation, label, leakage, model and API tests
 ├── web/                     # Vite + Leaflet dashboard (offline, bundled assets)
-├── data/fixtures/           # Committed integration fixture (raw/interim/processed are Git-ignored)
 ├── artifacts/               # Generated model, metrics and replay files (Git-ignored)
 └── docs/                    # Plans, decisions, audit, method, results, run log, handoff
 ```
@@ -371,7 +370,7 @@ make web
 
 ## 12. Run
 
-### Start the API and dashboard (fixture mode)
+### Start the API and dashboard
 ```bash
 make api
 ```
@@ -379,14 +378,10 @@ make api
 - Interactive API docs: `http://127.0.0.1:8000/docs`
 - Contract check: `make smoke` (runs in-process; the server does not need to be running)
 
-A fresh clone serves the checked-in **fixture** by default. Its values are illustrative integration data, not trained-model output or performance evidence, and the dashboard shows a visible FIXTURE ribbon.
-
-### Run the real historical replay
 The real model, metrics and replay files are generated locally and Git-ignored. The replay needs `artifacts/replay/reduced_c00_replay.json` (about 15 MB) and its metadata file. You can generate them with the pipeline below, or get a copy from the team; the raw corpus is not needed just to serve them.
 
 ```bash
 source .venv/bin/activate
-unset SYNOPTIQ_DEMO_MODE
 REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json API_PORT=8001 make api
 ```
 
@@ -409,7 +404,7 @@ This is one illustration; aggregate evaluation is in [Results](#6-results).
 
 | Endpoint | Returns |
 | --- | --- |
-| `GET /health` | Status and served data mode (`fixture` or `historical_replay`) |
+| `GET /health` | Status and served data mode (`historical_replay`) |
 | `GET /v1/replay?init=YYYY-MM-DD&lead=1..10` | GeoJSON `FeatureCollection` of regions |
 | `GET /v1/region/{region_id}?init=...&lead=...` | Probability and its complement, forecast vs. observed, threshold, UTC window, score evidence, earlier analogs, provenance |
 | `GET /v1/evaluation` | Saved held-out evaluation |
@@ -427,11 +422,9 @@ The map response states its `data_mode`, `model` and `truth_source`. Each region
 | `make candidate` | Train the reduced c00 LightGBM candidate; refuses to overwrite existing artifacts. |
 | `make evaluate-candidate` | Frozen validation calibration and held-out test evaluation; do not rerun to tune results. |
 | `make replay` | Export frozen replay assets (overwrites with `--replace`). |
-| `make api` | Run the fixture/replay FastAPI server. |
+| `make api` | Run the historical replay FastAPI server. |
 | `make web` | Build the offline Vite frontend. |
-| `make smoke` | Exercise API endpoints and response contracts (fixture). |
-| `make replay-smoke` | Same checks against the real replay asset. |
-| `make demo` | Serve the illustrative guided fixture walkthrough (not real model output). |
+| `make smoke` | Exercise API endpoints and response contracts against the historical replay asset. |
 | `make test` | Run unit and API tests. |
 | `make lint` | Ruff lint over `src`, `tests` and `scripts`. |
 
@@ -454,7 +447,7 @@ make test     # unit, leakage, time-window, model and API tests
 make lint     # Ruff
 ```
 
-`src/bust/` contains the data, feature, model, and API packages. `data/fixtures/` is the only committed data directory. Research, decisions, audit evidence, results, and the implementation roadmap are consolidated in [docs/SYNOPTIQ.md](docs/SYNOPTIQ.md); the original documents remain recoverable from Git history.
+`src/bust/` contains the data, feature, model, and API packages. Research, decisions, audit evidence, results, and the implementation roadmap are consolidated in [docs/SYNOPTIQ.md](docs/SYNOPTIQ.md); the original documents remain recoverable from Git history.
 
 ---
 
