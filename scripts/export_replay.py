@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import sys
 from pathlib import Path
 
@@ -31,6 +32,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--replace", action="store_true", help="Explicitly allow replacing generated replay artifacts.")
     args = parser.parse_args()
+    compressed_output = args.output.with_suffix(args.output.suffix + ".gz")
 
     inputs = ReplayInputs(
         dataset_path=args.dataset,
@@ -42,6 +44,10 @@ def main() -> None:
         regions_path=args.regions,
     )
     try:
+        if compressed_output.exists() and not args.replace:
+            raise FileExistsError(
+                f"Refusing to overwrite replay artifact: {compressed_output}. Use --replace to allow."
+            )
         result = export_replay_asset(
             inputs=inputs,
             replay_output_path=args.output,
@@ -50,6 +56,7 @@ def main() -> None:
             seed=args.seed,
             repo_root=ROOT,
         )
+        compressed_output.write_bytes(gzip.compress(args.output.read_bytes(), mtime=0))
     except (FileExistsError, FileNotFoundError, ValueError, OSError, KeyError) as exc:
         print("command=replay")
         print(f"manifest_id={get_manifest_fingerprint(args.manifest)}")
@@ -66,6 +73,7 @@ def main() -> None:
     print(f"split={result['split']}")
     print(f"seed={result['seed']}")
     print(f"output_path={args.output}")
+    print(f"compressed_output={compressed_output}")
     print(f"metadata_output={args.metadata_output}")
     print("status=historical_replay")
     print(f"selected_inits={','.join(result['selected_inits'])}")

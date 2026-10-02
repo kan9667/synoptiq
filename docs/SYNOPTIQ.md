@@ -474,11 +474,11 @@ make smoke
 
 The repository supplies dependency declarations/lock information and `environment.yml`. Where GRIB bindings are difficult to install, the conda-forge alternative is `conda env create -f environment.yml`, followed by `conda activate synoptiq`.
 
-A clone contains code, **not the generated replay or raw training corpus**. With the permitted real replay asset supplied separately, serve it using:
+A clone contains the reviewed compressed replay bundle, but not the raw training corpus. Serve it using:
 
 ```sh
 source .venv/bin/activate
-REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json API_PORT=8001 make api
+REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json.gz API_PORT=8001 make api
 ```
 
 The dashboard is then at `http://127.0.0.1:8001/`. The service requires a real replay asset; without one it fails at startup with the required path.

@@ -11,7 +11,7 @@ from bust.model.evaluate import FROZEN_SPLIT_ID
 
 client = TestClient(app)
 
-replay_asset = os.getenv("REPLAY_ASSET_PATH", str(ROOT / "artifacts/replay/reduced_c00_replay.json"))
+replay_asset = os.getenv("REPLAY_ASSET_PATH", str(ROOT / "artifacts/replay/reduced_c00_replay.json.gz"))
 emit(
     "smoke",
     replay_asset,

@@ -10,7 +10,7 @@ from _run_context import ROOT, emit
 from bust.data.dataset import get_manifest_fingerprint
 from bust.model.evaluate import FROZEN_SPLIT_ID
 
-replay_asset = os.getenv("REPLAY_ASSET_PATH", str(ROOT / "artifacts/replay/reduced_c00_replay.json"))
+replay_asset = os.getenv("REPLAY_ASSET_PATH", str(ROOT / "artifacts/replay/reduced_c00_replay.json.gz"))
 host = os.getenv("API_HOST", "127.0.0.1")
 port = int(os.getenv("API_PORT", "8000"))
 emit(
