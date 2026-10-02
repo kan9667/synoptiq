@@ -148,14 +148,14 @@ judgement or an operational warning system.
 Synoptiq was built by **HackTastic 6ix** for Smart India Hackathon 2026,
 Problem Statement SIH26079.
 
-| Team member | Contribution |
-| --- | --- |
-| **Kanishka Pandey** | Data lead: GEFS inventory, acquisition, decoding, accumulation audit, and source provenance. |
-| **Aanya Varshney** | Verification lead: IMD decoding, land-region coverage, and rainfall labels. |
-| **Rudraksh Saini** | Machine-learning lead: baselines, model training, calibration, and evaluation. |
-| **Dhruv Makkar** | Features and explainability lead: issue-time features, analog retrieval, and model evidence. |
-| **Aadi Jain** | Product lead: API, dashboard, and offline replay bundle. |
-| **Triman Singh Chadha** | Integration and communications lead: acceptance, storyboard, presentation, and submission package. |
+| Team member | Contribution | GitHub |
+| --- | --- | --- |
+| **Kanishka Pandey** | Data lead: GEFS inventory, acquisition, decoding, accumulation audit, and source provenance. | [@kan9667](https://github.com/kan9667) |
+| **Aanya Varshney** | Verification lead: IMD decoding, land-region coverage, and rainfall labels. | [@aanyavarshneyav](https://github.com/aanyavarshneyav) |
+| **Rudraksh Saini** | Machine-learning lead: baselines, model training, calibration, and evaluation. | [@Rudrakssh](https://github.com/Rudrakssh) |
+| **Dhruv Makkar** | Features and explainability lead: issue-time features, analog retrieval, and model evidence. | [@dhruvsded1](https://github.com/dhruvsded1) |
+| **Aadi Jain** | Product lead: API, dashboard, and offline replay bundle. | [@DeltaData0](https://github.com/DeltaData0) |
+| **Triman Singh Chadha** | Integration and communications lead: acceptance, storyboard, presentation, and submission package. | [@Triman01](https://github.com/Triman01) |
 
 For source details, model design, evaluation records, and references, see the
 [project reference](docs/SYNOPTIQ.md).
