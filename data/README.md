@@ -1,25 +1,18 @@
-# Data workspace
+# Why is this folder empty?
 
-This directory is intentionally included as an empty workspace for people who
-want to reproduce the data pipeline or train a new model. The large source and
-intermediate files are excluded from GitHub.
+This folder is kept in the repository so readers can see where the source data
+would live when Synoptiq is rebuilt from scratch. The large weather-data files
+are intentionally not included in GitHub.
 
-| Directory | Purpose |
+| Folder | Contains |
 | --- | --- |
-| `raw/` | Downloaded GEFSv12 forecast and IMD rainfall source files. |
-| `interim/` | Temporary decoded and aligned processing outputs. |
-| `processed/` | Rebuilt model-ready datasets. |
+| raw/ | Original GEFSv12 forecast and IMD rainfall files. |
+| interim/ | Temporary decoded and aligned data. |
+| processed/ | Rebuilt datasets used for modelling. |
 
-You do **not** need this directory's contents to run the historical replay
-dashboard. The reviewed replay data used by the API is bundled separately in
-`../artifacts/replay/reduced_c00_replay.json.gz`.
+You do not need any of these files to view the included historical replay. The
+dashboard reads its ready-to-use replay bundle from
+artifacts/replay/reduced_c00_replay.json.gz.
 
-Run the replay with:
-
-```bash
-make web
-make api
-```
-
-Only populate this workspace when acquiring source data or regenerating the
-dataset, model, or replay artifact.
+To learn about the sources and method, see the
+[project reference](../docs/SYNOPTIQ.md).
