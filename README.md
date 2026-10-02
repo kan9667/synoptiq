@@ -6,7 +6,12 @@
 
 ### A replayable view of where a rainfall forecast was most likely to be wrong
 
-Built by HackTastic 6ix for Smart India Hackathon 2026 · SIH26079
+Built by HackTastic 6ix for Smart India Hackathon 2026 · SIH26079 · Team ID **178497**
+
+[![Historical replay](https://img.shields.io/badge/Mode-Historical%20replay-0f766e)](docs/SYNOPTIQ.md)
+[![Forecast domain](https://img.shields.io/badge/Domain-Indian%20rainfall-2563eb)](docs/SYNOPTIQ.md#1-purpose-and-scope)
+[![Evaluation](https://img.shields.io/badge/Held--out%20Brier%20reduction-30.1%25-7c3aed)](docs/SYNOPTIQ.md#9-recorded-evaluation)
+[![Team ID](https://img.shields.io/badge/Team%20ID-178497-f59e0b)](submission/README.md)
 
 [Presentation](submission/README.md#presentation) · [Demo video](submission/README.md#demo-video) · [Project reference](docs/SYNOPTIQ.md)
 
@@ -21,6 +26,13 @@ error—a **forecast bust**—along with the evidence behind that estimate.
 
 It is a historical replay, not a live weather-warning service and not a source
 of new forecasts.
+
+## The dashboard
+
+![Synoptiq historical replay dashboard showing the regional bust-risk map and evidence panel](assets/screenshots/dashboard-historical-replay.png)
+
+*Synoptiq presents a regional bust-risk map alongside the selected region’s
+probability, evidence, verification window, and forecast context.*
 
 ## What can you explore?
 
@@ -146,7 +158,7 @@ judgement or an operational warning system.
 ## Team
 
 Synoptiq was built by **HackTastic 6ix** for Smart India Hackathon 2026,
-Problem Statement SIH26079.
+Problem Statement SIH26079 · **Team ID 178497**.
 
 | Team member | Contribution | GitHub |
 | --- | --- | --- |

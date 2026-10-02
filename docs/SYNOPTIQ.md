@@ -8,26 +8,47 @@ Synoptiq is a research prototype that estimates whether an issued regional rainf
 
 **Project-state snapshot: 28 September 2026.** This reference brings together the project's research, design decisions, implementation history, results, and future direction. It distinguishes the implemented reduced prototype from the broader intended system. Reported results come from the existing project records and saved-artifact summaries; compiling this document did not constitute a new experimental run.
 
+## Judge's briefing
+
+| Question | Evidence in this project |
+| --- | --- |
+| **What problem does it address?** | It identifies regional rainfall forecasts that are unusually likely to be wrong, helping a reviewer direct limited attention to the most uncertain cases. |
+| **What is the contribution?** | A reproducible forecast-reliability workflow that joins a defined error event, exact time alignment, chronological evaluation, interpretable evidence, comparable prior cases, and a regional dashboard. |
+| **What is demonstrably working?** | A frozen replay of three held-out dates, a read-only API, an offline-capable dashboard, and a reduced LightGBM candidate evaluated against a train-only climatology baseline. |
+| **What is the principal result?** | On 427,050 eligible 2018–2019 Day 1–9 verifications, the calibrated candidate records a Brier score of 0.03049 versus 0.04359 for climatology. |
+| **What should not be inferred?** | This is not a live warning system, a flood-impact model, NCUM/NEPS validation, or proof of operational readiness. |
+
+### Suggested review path
+
+1. Open the [presentation deck](../submission/README.md#presentation) for the project narrative.
+2. Watch the [demo video](../submission/README.md#demo-video) for the interface walkthrough.
+3. Run the bundled replay using the [repository quick start](../README.md#run-the-replay).
+4. Inspect the worked case in [§10](#10-a-worked-historical-example), then compare it with the aggregate evidence in [§9](#9-recorded-evaluation).
+
+This sequence moves from the user experience to the auditable evidence without
+asking the reviewer to accept a claim on the strength of a map alone.
+
 ## Contents
 
-1. [Purpose and scope](#1-purpose-and-scope)
-2. [Value and differentiation](#2-value-and-differentiation)
-3. [Current implementation](#3-current-implementation)
-4. [Scientific definition](#4-scientific-definition)
-5. [Time alignment and spatial coverage](#5-time-alignment-and-spatial-coverage)
-6. [Data sources and acquisition](#6-data-sources-and-acquisition)
-7. [Architecture and technology](#7-architecture-and-technology)
-8. [Model, calibration, and evidence](#8-model-calibration-and-evidence)
-9. [Recorded evaluation](#9-recorded-evaluation)
-10. [A worked historical example](#10-a-worked-historical-example)
-11. [Dashboard and API](#11-dashboard-and-api)
-12. [Repository and local operation](#12-repository-and-local-operation)
-13. [Development history and completion status](#13-development-history-and-completion-status)
-14. [Quality, reproducibility, and release](#14-quality-reproducibility-and-release)
-15. [Future development](#15-future-development)
-16. [Limitations and open questions](#16-limitations-and-open-questions)
-17. [Team](#17-team)
-18. [Research and project records](#18-research-and-project-records)
+1. [Judge's briefing](#judges-briefing)
+2. [Purpose and scope](#1-purpose-and-scope)
+3. [Value and differentiation](#2-value-and-differentiation)
+4. [Current implementation](#3-current-implementation)
+5. [Scientific definition](#4-scientific-definition)
+6. [Time alignment and spatial coverage](#5-time-alignment-and-spatial-coverage)
+7. [Data sources and acquisition](#6-data-sources-and-acquisition)
+8. [Architecture and technology](#7-architecture-and-technology)
+9. [Model, calibration, and evidence](#8-model-calibration-and-evidence)
+10. [Recorded evaluation](#9-recorded-evaluation)
+11. [A worked historical example](#10-a-worked-historical-example)
+12. [Dashboard and API](#11-dashboard-and-api)
+13. [Repository and local operation](#12-repository-and-local-operation)
+14. [Development history and completion status](#13-development-history-and-completion-status)
+15. [Quality, reproducibility, and release](#14-quality-reproducibility-and-release)
+16. [Future development](#15-future-development)
+17. [Limitations and open questions](#16-limitations-and-open-questions)
+18. [Team](#17-team)
+19. [Research and project records](#18-research-and-project-records)
 
 ## 1. Purpose and scope
 
@@ -116,6 +137,26 @@ Rows are not randomly split. Forecasts at nearby dates, locations, and leads are
 The 2018–2019 test was reserved for the recorded evaluation, but its results have now been examined. Future development cannot repeatedly tune against those results and continue calling the same test an untouched assessment.
 
 *Basis: Canonical Reference §3; Implementation Plan §3; decisions D-002, D-005, D-008; recorded results.*
+
+### Information boundary
+
+~~~mermaid
+sequenceDiagram
+    participant F as Forecast issue time
+    participant M as Synoptiq model
+    participant R as Reviewer
+    participant O as Later IMD observation
+
+    F->>M: Issued GEFS rainfall and permitted context
+    M->>R: Bust probability and score evidence
+    Note over M,R: No observation, realised error, or future label is available here
+    O->>R: Verification rainfall after the window closes
+    O->>M: Used later for historical labels and evaluation only
+~~~
+
+The information boundary is central to the claim: the system estimates
+forecast-error risk using information available at issuance, then evaluates that
+estimate only after the matching observation becomes available.
 
 ## 5. Time alignment and spatial coverage
 
@@ -261,27 +302,22 @@ The D1-07 completion record reports 115 tests passing and one local-data test sk
 
 ## 7. Architecture and technology
 
-```text
-Observed GEFS inventory + IMD annual files
-                  │
-        Bounded acquisition and decode
-                  │
-     Exact UTC alignment + fixed regions
-                  │
-     Train-only thresholds and real labels
-                  │
-              rows.parquet
-                  │
-     c00 LightGBM + validation calibrator
-                  │
-     Held-out evaluation vs climatology
-                  │
-     Frozen replay export + contributions
-                  │
-     Earlier analogs added as context
-                  │
-      Read-only API → replay dashboard
-```
+~~~mermaid
+flowchart LR
+    A[GEFSv12 reforecast<br/>forecast fields] --> C[Bounded acquisition,<br/>decoding, and validation]
+    B[IMD gridded rainfall<br/>observations] --> C
+    C --> D[Exact UTC alignment<br/>and fixed 2° regions]
+    D --> E[Train-only thresholds<br/>and historical labels]
+    E --> F[Aligned dataset]
+    F --> G[Reduced c00 LightGBM<br/>and validation calibration]
+    G --> H[Held-out evaluation<br/>versus climatology]
+    H --> I[Frozen replay export]
+    I --> J[Read-only FastAPI]
+    J --> K[Offline-capable dashboard]
+
+    L[Earlier comparable cases] --> K
+    M[Source keys, UTC windows,<br/>and score contributions] --> K
+~~~
 
 Historical observations are necessary for labels and evaluation, but there is no observation-to-predictor path at issue time. The current analog branch adds post-hoc context to replay; the full proposed architecture would also investigate earlier analog-error summaries as model features under stricter chronology controls.
 
@@ -294,7 +330,10 @@ Historical observations are necessary for labels and evaluation, but there is no
 | Persistence | SQLite acquisition state; Parquet rows; JSON replay, metadata, and metrics; saved Booster. |
 | Quality | pytest, Ruff, Make commands, manifests, checksums, frozen configuration, Git history. |
 
-The actual replay service loads a cached JSON asset; SQLite is used for acquisition state, not the current replay database. Local map geometry and bundled web dependencies allow prepared replay without external map tiles or a CDN. Initial dependency and data acquisition still require network access.
+The actual replay service loads a reviewed compressed replay asset; SQLite is
+used for acquisition state, not the current replay database. Local map geometry
+and bundled web dependencies allow prepared replay without external map tiles or
+a CDN. Initial dependency and data acquisition still require network access.
 
 Boosted trees were preferred to the proposed U-Net approach because the initial task is a regional tabular problem that can be trained and examined on CPU. A dense-looking map alone does not justify a high-volume pixel model. No GPU or managed cloud service is required for the present candidate; no measured runtime SLA or deployment-cost claim is established.
 
@@ -357,6 +396,18 @@ The separate validation comparison was 0.027952 Brier for the candidate versus a
 
 The recorded evaluation does not establish spread-only skill, PR-AUC, alert-budget recall, block-bootstrap uncertainty, physical-feature gains, or complete ablations. Those remain part of the planned assessment. No statistical-significance claim follows from row count alone.
 
+### What the evaluation supports
+
+| Supported statement | Not supported by the current evidence |
+| --- | --- |
+| The reduced candidate achieved a lower held-out Brier score than its recorded train-only climatology comparator on this defined cohort. | A claim of operational benefit, disaster-loss reduction, or superiority for every weather regime. |
+| The replay exposes scores, source windows, and model evidence for a small frozen set of test dates. | A claim that every date in the decade can be browsed or that the model is validated for live use. |
+| The study follows a chronological train/validation/test design and retains unsupported states as no-data. | A claim of perfect calibration, independent storm-level samples, or statistical significance from row count alone. |
+
+This distinction is intentional: a strong research submission makes its
+demonstrable contribution clear without extending its conclusions beyond the
+available evidence.
+
 ### Result identity
 
 ```text
@@ -378,7 +429,13 @@ The underlying records include:
 - `artifacts/metrics/reduced_c00_evaluation.json` — calibrated/uncalibrated held-out results and reliability bins.
 - `artifacts/model/reduced_c00_frozen_run.json` and `artifacts/model/reduced_c00_calibrator.json` — frozen configuration and validation-fitted calibration identity.
 
-These generated artifacts are local and Git-ignored. The recorded run includes a dirty worktree at commit `356f599`; it should not be described as training from a pristine tagged release. Replay export checks the manifest fingerprint and saved Booster hash before using test rows; it neither trains the candidate nor refits calibration.
+The compressed replay bundle and its metadata are committed so readers can run
+the prepared historical replay from a normal clone. Training, metrics, and
+uncompressed generated artifacts remain local. The recorded run includes a dirty
+worktree at commit `356f599`; it should not be described as training from a
+pristine tagged release. Replay export checks the manifest fingerprint and saved
+Booster hash before using test rows; it neither trains the candidate nor refits
+calibration.
 
 ## 10. A worked historical example
 
@@ -441,6 +498,16 @@ threshold_mm, bust, source_key, grib_steps, imd_year, window_quality
 
 The completed dataset additionally carries `split`. UTC timestamps and `window_quality` distinguish exact, approximate, and unavailable records; the present scored candidate uses exact Day 1–9 only.
 
+### Reviewer walkthrough
+
+For a focused live review, select the 2019-12-31 initialization and open region
+R28N-094E at Day 6. The interface presents the 65.44% recorded bust
+probability, the issued control-forecast total, the later IMD total, the
+region-specific threshold, the exact UTC window, model-score contributions, and
+strictly earlier comparable cases. The same case is documented in [§10](#10-a-worked-historical-example);
+the dashboard therefore supports both visual inspection and source-backed
+cross-checking.
+
 ## 12. Repository and local operation
 
 | Location | Purpose |
@@ -457,7 +524,8 @@ The completed dataset additionally carries `split`. UTC timestamps and `window_q
 | `tests/` | Data, leakage, model, and API contract tests. |
 | `web/` | Vite/Leaflet frontend and local assets. |
 | `data/raw/`, `data/interim/`, `data/processed/` | Local, ignored source/intermediate/derived data. |
-| `artifacts/model/`, `artifacts/metrics/`, `artifacts/replay/` | Local, ignored generated model and evidence assets. |
+| `artifacts/model/`, `artifacts/metrics/` | Local, ignored generated model and evaluation assets. |
+| `artifacts/replay/` | Bundled compressed replay and metadata, plus local regenerated exports. |
 | `assets/screenshots/`, `submission/`, `slides/`, `demo/` | Homes for reviewed presentation and submission material; folder existence is not release completion. |
 
 ### Setup
