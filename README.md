@@ -8,10 +8,11 @@
 
 Built by HackTastic 6ix for Smart India Hackathon 2026 · SIH26079 · Team ID **178497**
 
-[![Historical replay](https://img.shields.io/badge/Mode-Historical%20replay-0f766e)](docs/SYNOPTIQ.md)
-[![Forecast domain](https://img.shields.io/badge/Domain-Indian%20rainfall-2563eb)](docs/SYNOPTIQ.md#1-purpose-and-scope)
-[![Evaluation](https://img.shields.io/badge/Held--out%20Brier%20reduction-30.1%25-7c3aed)](docs/SYNOPTIQ.md#9-recorded-evaluation)
+[![Theme](https://img.shields.io/badge/Theme-Smart%20Automation-0f766e)](docs/SYNOPTIQ.md)
+[![PS Category](https://img.shields.io/badge/PS%20Category-Software-2563eb)](docs/SYNOPTIQ.md)
 [![Team ID](https://img.shields.io/badge/Team%20ID-178497-f59e0b)](submission/README.md)
+[![Team Name](https://img.shields.io/badge/Team-HackTastic%206ix-7c3aed)](submission/README.md)
+[![Problem Statement ID](https://img.shields.io/badge/PS%20ID-26079-e11d48)](docs/SYNOPTIQ.md)
 
 [Presentation](submission/README.md#presentation) · [Demo video](submission/README.md#demo-video) · [Project reference](docs/SYNOPTIQ.md)
 
