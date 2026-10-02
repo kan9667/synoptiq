@@ -91,7 +91,7 @@ export function getTierStroke(tier) {
  * @param {HTMLElement} container
  * @param {string} mode - 'bust' | 'forecast' | 'coverage'
  */
-export function renderLegend(container, mode = "bust", dataMode = "fixture", tierCounts = null) {
+export function renderLegend(container, mode = "bust", dataMode = "historical_replay", tierCounts = null) {
   if (mode === "coverage") {
     const items = [
       { key: "full", ...COVERAGE_PALETTE.full },
@@ -125,7 +125,6 @@ export function renderLegend(container, mode = "bust", dataMode = "fixture", tie
   }
 
   if (mode === "forecast") {
-    if (dataMode === "historical_replay") {
       const items = [
         { key: "heavy", ...FORECAST_PALETTE.heavy },
         { key: "moderate", ...FORECAST_PALETTE.moderate },
@@ -150,25 +149,6 @@ export function renderLegend(container, mode = "bust", dataMode = "fixture", tie
         </div>
         <div class="legend-caption">Actual c00 control-forecast total for the displayed 24-hour replay window; no-data cells remain neutral.</div>
       `;
-      return;
-    }
-    container.innerHTML = `
-      <div class="legend-header">
-        <span class="legend-title">FORECAST RAINFALL</span>
-        <span class="legend-sub">FIXTURE MODE</span>
-      </div>
-      <div class="legend-items">
-        <div class="legend-row" title="Forecast totals are not provided in fixture mode.">
-          <span class="legend-swatch" style="background-color: #475569; border-color: #94a3b8;"></span>
-          <div class="legend-meta">
-            <span class="legend-label">Unavailable in Fixture</span>
-          </div>
-        </div>
-      </div>
-      <div class="legend-caption">
-        Forecast total unavailable in fixture; requires real forecast-total field from pipeline.
-      </div>
-    `;
     return;
   }
 

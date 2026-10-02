@@ -117,7 +117,7 @@ def test_evaluation_artifact_preserves_explicit_no_data_and_requires_ready_calib
         sample_count=2,
         metrics={"brier_score": 0.2, "bust_prevalence": 0.5},
         reliability=[],
-        message="Measured in a test fixture only.",
+        message="Measured in a test sample only.",
     )
     with pytest.raises(ValueError, match="ready validation-only calibrator"):
         build_evaluation_artifact(

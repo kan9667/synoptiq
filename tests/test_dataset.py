@@ -231,10 +231,9 @@ def test_check_corpus_coverage_requires_manifest_evidence(tmp_path: Path) -> Non
         d_nodash = d.replace("-", "")
         (gefs_dir / f"apcp_sfc_{d_nodash}00_c00.grib2").write_text("dummy")
 
-    # Empty manifest (only fixture)
+    # Empty manifest
     manifest_rows = [
         "manifest_id,source,provider,object_key_or_url,retrieved_utc,sha256,bytes,init_utc,variable,member,step_start_h,step_end_h,units,status,notes",
-        "fixture-v1,fixture,repo,path,,,,,illustrative,,,,,fixture,fixture",
     ]
     manifest_path = tmp_path / "DATA_MANIFEST.csv"
     manifest_path.write_text("\n".join(manifest_rows), encoding="utf-8")

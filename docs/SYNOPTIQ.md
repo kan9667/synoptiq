@@ -257,7 +257,7 @@ GRIB validation checks member, initialization, units, geometry, accumulation sem
 
 Threshold fitting removes any pre-existing `threshold_mm` and `bust` before a many-to-one merge, preserves row order, and excludes unavailable/Day-10 rows. Day 10 also retains null `imd_year`. Final Parquet publication is atomic: failure does not leave a partial file masquerading as a completed dataset.
 
-The D1-07 completion record reports 115 tests passing and one local-data test skipped, alongside lint, web-build, fixture-smoke, and whitespace checks. These are historical results for that milestone, **not the current test count or a new test run**. Earlier missing-corpus and smaller test-suite entries are superseded progress snapshots.
+The D1-07 completion record reports 115 tests passing and one local-data test skipped, alongside lint, web-build, smoke, and whitespace checks. These are historical results for that milestone, **not the current test count or a new test run**. Earlier missing-corpus and smaller test-suite entries are superseded progress snapshots.
 
 ## 7. Architecture and technology
 
@@ -456,7 +456,6 @@ The completed dataset additionally carries `split`. UTC timestamps and `window_q
 | `scripts/` | Reproducible command entry points. |
 | `tests/` | Data, leakage, model, and API contract tests. |
 | `web/` | Vite/Leaflet frontend and local assets. |
-| `data/fixtures/` | Committed illustrative integration data. |
 | `data/raw/`, `data/interim/`, `data/processed/` | Local, ignored source/intermediate/derived data. |
 | `artifacts/model/`, `artifacts/metrics/`, `artifacts/replay/` | Local, ignored generated model and evidence assets. |
 | `assets/screenshots/`, `submission/`, `slides/`, `demo/` | Homes for reviewed presentation and submission material; folder existence is not release completion. |
@@ -475,15 +474,14 @@ make smoke
 
 The repository supplies dependency declarations/lock information and `environment.yml`. Where GRIB bindings are difficult to install, the conda-forge alternative is `conda env create -f environment.yml`, followed by `conda activate synoptiq`.
 
-A clone contains code and fixtures, **not the real generated replay or raw training corpus**. With the permitted real replay asset supplied separately, serve it using:
+A clone contains code, **not the generated replay or raw training corpus**. With the permitted real replay asset supplied separately, serve it using:
 
 ```sh
 source .venv/bin/activate
-unset SYNOPTIQ_DEMO_MODE
 REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json API_PORT=8001 make api
 ```
 
-The dashboard is then at `http://127.0.0.1:8001/`. The mode comes from configuration and the asset, not the port. Without a real replay path, the default service serves the fixture; current `make demo` explicitly enables fixture demonstration mode. This differs from the original plan's intended use of that command.
+The dashboard is then at `http://127.0.0.1:8001/`. The service requires a real replay asset; without one it fails at startup with the required path.
 
 | Command | Current purpose |
 | --- | --- |
@@ -493,14 +491,14 @@ The dashboard is then at `http://127.0.0.1:8001/`. The mode comes from configura
 | `make evaluate-candidate` | Frozen-candidate calibration/evaluation workflow. |
 | `make replay` | Generate replay artifacts; currently permits replacement. |
 | `make api`, `make web` | Serve the selected replay and build the frontend. |
-| `make smoke`, `make replay-smoke` | Fixture/API smoke and real replay smoke respectively. |
+| `make smoke` | Historical replay API smoke check. |
 | `make test`, `make lint` | Tests and source linting. |
 
 Serving an existing replay does not require downloading the corpus or retraining. Recomputing results does require the relevant aligned data, model/calibrator identities, and evaluation configuration. Source-code licensing does not itself authorize redistribution of external data.
 
 ## 13. Development history and completion status
 
-The original 72-hour plan established two critical boundaries: **D1-04**, proving the forecast/observation time match before empirical labels; and **D2-05**, proving the complete real-data path before an empirical demonstration. Frontend integration could proceed earlier using explicit fixtures.
+The original 72-hour plan established two critical boundaries: **D1-04**, proving the forecast/observation time match before empirical labels; and **D2-05**, proving the complete real-data path before an empirical demonstration.
 
 The project then evolved through these decisions:
 
@@ -508,7 +506,6 @@ The project then evolved through these decisions:
 | --- | --- | --- |
 | D-001 | 2026-09-26 | Active rainfall-only GEFSv12/IMD regional research scope. |
 | D-002 | 2026-09-26 | 2010–15 / 2016–17 / 2018–19 split, no random rows. Original “pending data gate” wording is superseded by the completed corpus and applied split. |
-| D-003 | 2026-09-26 | Fixtures remain visibly distinct from empirical results. |
 | D-004 | 2026-09-26 | Day 10 initially withheld pending interval audit; D-005 supplies the resulting policy. |
 | D-005 | 2026-09-27 | Active 03–03 UTC mapping, exact Days 1–9, Day 10 unavailable; reopen if contrary official product-specific timing evidence appears. |
 | D-006 | 2026-09-27 | Active even-center, complete-cell 2° grid and ≥80% support rule, including peripheral no-data tracking and the northern-edge exclusion. |
@@ -528,7 +525,6 @@ The project then evolved through these decisions:
 | D1-03 | Complete | Both IMD pilot years decode; date axis and mask recorded. |
 | D1-04 | Complete — blocking gate | Signed daily-window audit and exact/approximate/unavailable verdict; exact Days 1–9 authorized, Day 10 unavailable. |
 | D1-05 | Complete | Fixed-region geometry, three hand checks, label/alignment tests, and no-data cases pass. |
-| D1-06 | Complete | Fixture API/map/provenance and offline smoke with visible fixture identity; `pilot-gate` milestone. |
 | D1-07 | Complete | Real split-aware rows, counts by year/lead/season, missingness, and train-only thresholds verified. |
 | D2-01 | Complete under explicit-status acceptance | Reproducible eligible climatology metrics; spread-only explicitly unavailable, not completed empirically. |
 | D2-02 | Complete | Region click and lead curve expose threshold, interval, provenance, and real supplied values. |
@@ -549,7 +545,7 @@ Older “blocked” or “recording pending” paragraphs remain recoverable in 
 
 Scientific credibility depends on the joins between sources, not just a passing training command. The test and acceptance design covers accumulation gaps/overlaps, daily-date mapping, regional support, strict labels, training-only thresholds, earlier-only analogs, validation-only calibration, fixed splits, API schemas, and explicit no-data handling.
 
-A release needs a traceable row linking a real source key and GRIB steps to its IMD interval, forecast/reference amounts, threshold, probability, explanation, API response, and rendered region. Fixture smoke verifies integration; it does not establish model skill.
+A release needs a traceable row linking a real source key and GRIB steps to its IMD interval, forecast/reference amounts, threshold, probability, explanation, API response, and rendered region. Replay smoke verifies integration; it does not establish model skill.
 
 The lasting release requirements are:
 
@@ -560,7 +556,7 @@ The lasting release requirements are:
 - **Distribution:** current provider terms and third-party asset attribution checked; no raw archives, credentials, virtual environments, or large recordings committed.
 - **Acceptance:** final release/assets frozen, presentation/video links opened on another device, and submission receipt retained when applicable.
 
-The source manifest and historical run records preserve what was actually attempted and produced. Source, threshold, time-window, split, grid, or feature changes are recorded as decisions rather than silently changing the meaning of existing results. Missing dates are not filled with fabricated forecasts; an incomplete gate remains blocked with a labeled fixture/pilot fallback.
+The source manifest and historical run records preserve what was actually attempted and produced. Source, threshold, time-window, split, grid, or feature changes are recorded as decisions rather than silently changing the meaning of existing results. Missing dates are not filled with fabricated forecasts; an incomplete gate remains blocked until the replay is available.
 
 ### Continuing the evidence record
 

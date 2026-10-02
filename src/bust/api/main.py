@@ -11,7 +11,7 @@ from bust.api.schemas import EvaluationResponse, HealthResponse, RegionResponse,
 app = FastAPI(
     title="Synoptiq Replay API",
     version="0.1.0",
-    description="Read-only historical replay API. Fixture mode has no model claim.",
+    description="Read-only historical replay API.",
 )
 
 

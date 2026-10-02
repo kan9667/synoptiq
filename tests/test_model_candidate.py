@@ -214,7 +214,7 @@ def test_overwrite_safety_when_only_txt_exists(tmp_path: Path) -> None:
     pq.write_table(pa.Table.from_pandas(df), parquet_file)
 
     manifest_file = tmp_path / "DATA_MANIFEST.csv"
-    manifest_file.write_text("manifest_id,source,status\nfixture-v1,fixture,decoded\n", encoding="utf-8")
+    manifest_file.write_text("manifest_id,source,status\nexample-v1,example,decoded\n", encoding="utf-8")
 
     model_file = tmp_path / "candidate.json"
     metrics_file = tmp_path / "candidate_metrics.json"
@@ -267,7 +267,7 @@ def test_pipeline_validation_artifacts_contract_and_deferred_disclosure(tmp_path
     pq.write_table(pa.Table.from_pandas(df_with_test), parquet_file)
 
     manifest_file = tmp_path / "DATA_MANIFEST.csv"
-    manifest_file.write_text("manifest_id,source,status\nfixture-v1,fixture,decoded\n", encoding="utf-8")
+    manifest_file.write_text("manifest_id,source,status\nexample-v1,example,decoded\n", encoding="utf-8")
 
     model_file = tmp_path / "reduced_c00_candidate.json"
     metrics_file = tmp_path / "reduced_c00_validation.json"

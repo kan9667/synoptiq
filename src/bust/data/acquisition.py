@@ -1434,7 +1434,7 @@ def sync_manifest_with_streaming_corpus(
 
     Requirements:
     - Exports only completed GEFS c00 items.
-    - Preserves all existing IMD, fixture, pilot, p01-p04, PWAT, and Day-10 rows in their original order.
+    - Preserves all existing IMD, pilot, p01-p04, PWAT, and Day-10 rows in their original order.
     - For 2018-08-01 c00 pilot: updates/reuses record deterministically without duplicating it.
     - Appends/inserts remaining completed GEFS c00 records with factual metadata:
       actual source_key, actual retrieval timestamp, actual byte count, actual SHA-256,
@@ -1529,7 +1529,7 @@ def sync_manifest_with_streaming_corpus(
             else:
                 output_rows.append(row)
         else:
-            # Preserve all non-c00 rows (IMD, fixture, pilots, p01-p04, PWAT, Day-10, method) unchanged
+            # Preserve all non-c00 rows (IMD, pilots, p01-p04, PWAT, Day-10, method) unchanged
             output_rows.append(row)
 
     # Append remaining completed GEFS c00 records in chronological order

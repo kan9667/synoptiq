@@ -2,10 +2,10 @@
 PYTHON ?= python
 NPM ?= npm
 
-.PHONY: help pilot dataset train candidate evaluate-candidate replay api web smoke replay-smoke test lint demo
+.PHONY: help pilot dataset train candidate evaluate-candidate replay api web smoke test lint
 
 help:
-	@echo "Targets: pilot dataset train candidate evaluate-candidate replay api web smoke replay-smoke test lint demo"
+	@echo "Targets: pilot dataset train candidate evaluate-candidate replay api web smoke test lint"
 
 pilot:
 	$(PYTHON) scripts/pilot.py
@@ -34,14 +34,8 @@ web:
 smoke:
 	$(PYTHON) scripts/smoke.py
 
-replay-smoke:
-	REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json $(PYTHON) scripts/smoke.py
-
 test:
 	$(PYTHON) -m pytest
 
 lint:
 	$(PYTHON) -m ruff check src tests scripts
-
-demo: web
-	SYNOPTIQ_DEMO_MODE=1 $(PYTHON) scripts/serve.py

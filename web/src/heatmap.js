@@ -71,7 +71,7 @@ export function createHeatmapLayer(map) {
       let colorMid = "rgba(71, 85, 105, 0.15)";
 
       if (currentMode === "forecast") {
-        // Forecast total is unavailable in fixture mode; render no inferred rainfall glow
+        // Missing forecast totals render with no inferred rainfall glow.
         return;
       }
 

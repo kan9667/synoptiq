@@ -26,14 +26,13 @@ const state = {
   selectedRegionId: null,
   currentReplay: null,
   availableInits: ["2018-08-01"],
-  dataMode: "fixture",
+  dataMode: "historical_replay",
   regionRequestId: 0,
 };
 
 let currentEvaluation = null;
 
 // DOM references
-const ribbonEl = document.querySelector("#fixture-ribbon");
 const navInitTime = document.querySelector("#nav-init-time");
 const navLeadHorizon = document.querySelector("#nav-lead-horizon");
 const navWindowSemantics = document.querySelector("#nav-window-semantics");
@@ -64,10 +63,9 @@ if (btnNavModel) btnNavModel.addEventListener("click", () => modals.openFeatureA
 
 function updateModeChrome(dataMode) {
   state.dataMode = dataMode || state.dataMode;
-  if (ribbonEl) ribbonEl.hidden = state.dataMode !== "fixture";
   if (navModeBadge) navModeBadge.className = `mode-badge mode-${state.dataMode}`;
   if (navModeText) {
-    navModeText.textContent = state.dataMode === "fixture" ? "FIXTURE MODE" : "HISTORICAL REPLAY";
+    navModeText.textContent = "HISTORICAL REPLAY";
   }
 }
 
@@ -251,7 +249,7 @@ async function boot() {
   try {
     // 1. Health check & Mode determination
     const health = await getHealth();
-    updateModeChrome(health.data_mode || "fixture");
+    updateModeChrome(health.data_mode || "historical_replay");
 
     // 2. Discover available initialization dates from API
     const inits = await getAvailableInits();

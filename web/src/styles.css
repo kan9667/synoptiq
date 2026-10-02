@@ -100,62 +100,6 @@ html, body {
 }
 
 /* ==========================================================================
-   Fixture Warning Ribbon (Non-negotiable; never hide in fixture mode)
-   ========================================================================== */
-.fixture-warning-ribbon {
-  background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-  border-bottom: 1px solid #ef4444;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  position: relative;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(185, 28, 28, 0.4);
-}
-
-.fixture-warning-ribbon[hidden] {
-  display: none !important;
-}
-
-.ribbon-inner {
-  max-width: 1920px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  text-align: center;
-  flex-wrap: wrap;
-}
-
-.ribbon-icon {
-  font-size: 1rem;
-}
-
-.ribbon-text {
-  font-weight: 500;
-}
-
-.ribbon-text strong {
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.15rem 0.4rem;
-  border-radius: var(--radius-sm);
-}
-
-.ribbon-tag {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.1rem 0.5rem;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-}
-
-/* ==========================================================================
    Persistent Top Bar / Header
    ========================================================================== */
 .top-nav {
@@ -281,12 +225,6 @@ html, body {
   padding: 0.35rem 0.8rem;
   border-radius: 9999px;
   text-transform: uppercase;
-}
-
-.mode-badge.mode-fixture {
-  background: rgba(220, 38, 38, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
 }
 
 .mode-badge.mode-historical_replay {
@@ -3114,4 +3052,3 @@ details.group-roadmap[open] > summary::after {
 .inspector-section {
   transition: opacity 200ms ease;
 }
-

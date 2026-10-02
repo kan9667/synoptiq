@@ -271,7 +271,7 @@ export function createMap(containerElement, onSelectRegion, onModeChange) {
       <button type="button" class="btn-view-mode active" data-mode="bust" title="View probability-of-bust risk tiers">
         <span class="btn-icon">⚡</span> Bust Risk
       </button>
-      <button type="button" class="btn-view-mode" data-mode="forecast" title="View forecast rainfall (unavailable in fixture mode)">
+      <button type="button" class="btn-view-mode" data-mode="forecast" title="View control-forecast rainfall">
         <span class="btn-icon">🌧️</span> Forecast Rain
       </button>
       <button type="button" class="btn-view-mode" data-mode="coverage" title="View audited 112 India-land 2° grid coverage">
@@ -337,7 +337,7 @@ export function createMap(containerElement, onSelectRegion, onModeChange) {
 
     // Notify legend to update
     if (onModeChange) {
-        onModeChange(mode, cachedPayload?.data_mode || "fixture");
+        onModeChange(mode, cachedPayload?.data_mode || "historical_replay");
     }
 
     // Re-render layer
@@ -374,7 +374,7 @@ export function createMap(containerElement, onSelectRegion, onModeChange) {
 
     if (currentMode === "forecast") {
       // Forecast view uses only a real, explicitly provided forecast-total field if present.
-      // In fixture mode, forecast totals are unavailable; render neutral no-data styling without inferred colours.
+      // Missing forecast totals use neutral no-data styling without inferred colours.
       const fRain = typeof p.f_control_mm === "number" ? p.f_control_mm : null;
       let fill = FORECAST_PALETTE.no_data.fill;
       let stroke = FORECAST_PALETTE.no_data.stroke;
@@ -630,7 +630,7 @@ export function createMap(containerElement, onSelectRegion, onModeChange) {
           ? "Unavailable"
           : Number.isFinite(Number(p.f_control_mm))
           ? `${Number(p.f_control_mm).toFixed(1)} mm`
-          : "Forecast total unavailable in fixture";
+          : "Forecast total unavailable in this historical replay";
         const rainStat = isDay10
           ? `<div class="map-tooltip-stat">
                <span class="stat-lbl">Status:</span>
