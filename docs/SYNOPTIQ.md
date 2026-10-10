@@ -4,9 +4,9 @@
 
 Synoptiq is a research prototype that estimates whether an issued regional rainfall forecast is unusually likely to have a large error. It combines a defined forecast-error event, historical verification, a probability model, and an interface for inspecting the evidence behind each score. The aim is to help forecast reviewers decide **where a second look is warranted**, not to replace numerical weather prediction.
 
-**Project:** SIH 26079 · **Team:** HackTastic 6ix · **Repository:** [kan9667/synoptiq](https://github.com/kan9667/synoptiq)
+**Project:** SIH26079 · **Team:** HackTastic 6ix · **Repository:** [kan9667/synoptiq](https://github.com/kan9667/synoptiq)
 
-**Project-state snapshot: 28 September 2026.** This reference brings together the project's research, design decisions, implementation history, results, and future direction. It distinguishes the implemented reduced prototype from the broader intended system. Reported results come from the existing project records and saved-artifact summaries; compiling this document did not constitute a new experimental run.
+**Project-state snapshot: 28 September 2026; links and release status updated October 2026.** This reference brings together the project's research, design decisions, implementation history, results, and future direction. It distinguishes the implemented reduced prototype from the broader intended system. Reported results come from the existing project records and saved-artifact summaries; compiling this document did not constitute a new experimental run.
 
 ## Judge's briefing
 
@@ -25,36 +25,33 @@ Synoptiq is a research prototype that estimates whether an issued regional rainf
 3. Run the bundled replay using the [repository quick start](../README.md#run-the-replay).
 4. Inspect the worked case in [§10](#10-a-worked-historical-example), then compare it with the aggregate evidence in [§9](#9-recorded-evaluation).
 
-This sequence moves from the user experience to the auditable evidence without
-asking the reviewer to accept a claim on the strength of a map alone.
-
 ## Contents
 
-1. [Judge's briefing](#judges-briefing)
-2. [Purpose and scope](#1-purpose-and-scope)
-3. [Value and differentiation](#2-value-and-differentiation)
-4. [Current implementation](#3-current-implementation)
-5. [Scientific definition](#4-scientific-definition)
-6. [Time alignment and spatial coverage](#5-time-alignment-and-spatial-coverage)
-7. [Data sources and acquisition](#6-data-sources-and-acquisition)
-8. [Architecture and technology](#7-architecture-and-technology)
-9. [Model, calibration, and evidence](#8-model-calibration-and-evidence)
-10. [Recorded evaluation](#9-recorded-evaluation)
-11. [A worked historical example](#10-a-worked-historical-example)
-12. [Dashboard and API](#11-dashboard-and-api)
-13. [Repository and local operation](#12-repository-and-local-operation)
-14. [Development history and completion status](#13-development-history-and-completion-status)
-15. [Quality, reproducibility, and release](#14-quality-reproducibility-and-release)
-16. [Future development](#15-future-development)
-17. [Limitations and open questions](#16-limitations-and-open-questions)
-18. [Team](#17-team)
-19. [Research and project records](#18-research-and-project-records)
+- [Judge's briefing](#judges-briefing)
+- [1. Purpose and scope](#1-purpose-and-scope)
+- [2. Value and differentiation](#2-value-and-differentiation)
+- [3. Current implementation](#3-current-implementation)
+- [4. Scientific definition](#4-scientific-definition)
+- [5. Time alignment and spatial coverage](#5-time-alignment-and-spatial-coverage)
+- [6. Data sources and acquisition](#6-data-sources-and-acquisition)
+- [7. Architecture and technology](#7-architecture-and-technology)
+- [8. Model, calibration, and evidence](#8-model-calibration-and-evidence)
+- [9. Recorded evaluation](#9-recorded-evaluation)
+- [10. A worked historical example](#10-a-worked-historical-example)
+- [11. Dashboard and API](#11-dashboard-and-api)
+- [12. Repository and local operation](#12-repository-and-local-operation)
+- [13. Development history and completion status](#13-development-history-and-completion-status)
+- [14. Quality, reproducibility, and release](#14-quality-reproducibility-and-release)
+- [15. Future development](#15-future-development)
+- [16. Limitations and open questions](#16-limitations-and-open-questions)
+- [17. Team](#17-team)
+- [18. Research and project records](#18-research-and-project-records)
 
 ## 1. Purpose and scope
 
 A rainfall forecast provides an expected amount, but not necessarily an accessible answer to: *How likely is this particular region-and-lead forecast to be substantially wrong?* Synoptiq treats that question as a separate, measurable prediction problem.
 
-Its forecast target is the **NOAA GEFSv12 control member's regional 24-hour rainfall total**. Its verification reference is **IMD 0.25° daily gridded rainfall**. Historical forecasts supply the inputs; their subsequent differences from IMD rainfall supply labels for learning and evaluation.
+The forecast it assesses is the **NOAA GEFSv12 control member's regional 24-hour rainfall total**. Its verification reference is **IMD 0.25° daily gridded rainfall**. Historical forecasts supply the inputs; their subsequent differences from IMD rainfall supply labels for learning and evaluation.
 
 The intended workflow is:
 
@@ -98,10 +95,10 @@ The proposed full system asks a further research question: **do ensemble, physic
 | Evaluation | Real held-out Brier and reliability results against train-only climatology. |
 | Evidence | Saved model-score contributions and earlier training-era c00 analog cases. |
 | Product | Read-only API and offline-capable dashboard serving three frozen test initializations. |
-| Integration | D2-05 real-data vertical-slice completion is recorded, including owner-confirmed offline recording. |
-| Remaining release work | Final explanation audit, presentation/video reconciliation, second-machine release check, asset freeze, and submission acceptance remain open in the tracker. |
+| Integration | The full real-data path (dataset, prediction, API, map, and explanation) was verified end to end, including an offline browser recording. |
+| Release work | The presentation and demo video are published (see [`submission/README.md`](../submission/README.md)). The final explanation audit, second-machine release check, and asset freeze were open at this snapshot. |
 
-The complete p01–p04 and atmospheric training corpus is **not** implemented. Ensemble, moisture, and circulation preview cards contain labeled illustrative examples; they are not inputs to the current model. A completed integration milestone does not mean every feature in the original research design has been delivered.
+The complete p01–p04 and atmospheric training corpus has **not** been acquired. Ensemble, moisture, and circulation preview cards contain labeled illustrative examples; they are not inputs to the current model. A completed integration milestone does not mean every feature in the original research design has been delivered.
 
 ## 4. Scientific definition
 
@@ -136,7 +133,7 @@ Rows are not randomly split. Forecasts at nearby dates, locations, and leads are
 
 The 2018–2019 test was reserved for the recorded evaluation, but its results have now been examined. Future development cannot repeatedly tune against those results and continue calling the same test an untouched assessment.
 
-*Basis: Canonical Reference §3; Implementation Plan §3; decisions D-002, D-005, D-008; recorded results.*
+*Basis: the original research reference and implementation plan (see §18); decisions D-002, D-005, and D-008 (see §13); recorded results.*
 
 ### Information boundary
 
@@ -149,7 +146,7 @@ sequenceDiagram
 
     F->>M: Issued GEFS rainfall and permitted context
     M->>R: Bust probability and score evidence
-    Note over M,R: No observation, realised error, or future label is available here
+    Note over M,R: No observation, realized error, or future label is available here
     O->>R: Verification rainfall after the window closes
     O->>M: Used later for historical labels and evaluation only
 ~~~
@@ -168,7 +165,7 @@ The selected GEFS forecasts initialize at 00 UTC. The adopted IMD daily-date int
 IMD label D → [D minus one day at 03:00 UTC, D at 03:00 UTC)
 ```
 
-This convention is supported by the source literature and documented observing convention. It is not an explicit time-bounds attribute found in the downloaded NetCDF files. Decision D-005 retains that distinction and allows reopening the mapping if an authoritative product-specific specification contradicts it.
+This convention is supported by the source literature and IMD's documented observing practice. It is not an explicit time-bounds attribute found in the downloaded NetCDF files. Decision D-005 retains that distinction and allows reopening the mapping if an authoritative product-specific specification contradicts it.
 
 For initialization `init` and lead `L`, the selected daily interval is:
 
@@ -185,7 +182,7 @@ For initialization `init` and lead `L`, the selected daily interval is:
 
 GRIB accumulations must tile that interval without gaps or double-counting. Where messages describe overlapping accumulations, appropriate differences isolate the needed subintervals. Stored provenance preserves the **actual GRIB arithmetic**, not just the nominal target window.
 
-The D1-04 audit was signed on **27 September 2026 by Kanishka Pandey**, the project decision owner. It permits exact Day 1–9 label construction, not a performance claim. The retained arithmetic below preserves the substance of that audit.
+The time-window audit (milestone D1-04, see §13) was signed on **27 September 2026 by Kanishka Pandey**, the project decision owner. It permits exact Day 1–9 label construction, not a performance claim. The retained arithmetic below preserves the substance of that audit.
 
 At 20°N, 78°E, the actual `gefs-20180801-p01-apcp` pilot provided these amounts for the IMD label 2018-08-02:
 
@@ -227,7 +224,7 @@ Missing support is never treated as zero rainfall or zero bust probability. The 
 
 Region names encode centers, not administrative districts. The dashboard's orientation outline comes from the IMD grid mask and is not an official political boundary.
 
-*Basis: data audit; decisions D-005–D-007. The later fixed-grid decision makes the implemented coverage denominator more specific than the original plan's generic area-coverage description.*
+*Basis: the signed data audit (see §18); decisions D-005–D-007. The later fixed-grid decision makes the implemented coverage denominator more specific than the original plan's generic area-coverage description.*
 
 ## 6. Data sources and acquisition
 
@@ -288,7 +285,7 @@ IMD 2018:
 26bd53aeb2d6f3f7d39516c41606db005dede474906b33462d1a0caef69cd6ec
 ```
 
-The older ambiguous c00 local file was **36,773,744 bytes**, not the verified remote size, and was excluded as unverified. All eleven annual IMD files later passed full-year date-axis checks, including leap years, variable/units, and geometry. Source-level identities remain in [DATA_MANIFEST.csv](../DATA_MANIFEST.csv).
+The older ambiguous c00 local file was **36,773,744 bytes**, not the verified remote size, and was excluded as unverified. All 11 annual IMD files later passed full-year date-axis checks, including leap years, variable/units, and geometry. Source-level identities remain in [DATA_MANIFEST.csv](../DATA_MANIFEST.csv).
 
 ### Corpus and build safeguards
 
@@ -305,7 +302,7 @@ The D1-07 completion record reports 115 tests passing and one local-data test sk
 ~~~mermaid
 flowchart LR
     A[GEFSv12 reforecast<br/>forecast fields] --> C[Bounded acquisition,<br/>decoding, and validation]
-    B[IMD gridded rainfall<br/>observations] --> C
+    B[IMD gridded rainfall<br/>observations] -. "labels and verification only" .-> C
     C --> D[Exact UTC alignment<br/>and fixed 2° regions]
     D --> E[Train-only thresholds<br/>and historical labels]
     E --> F[Aligned dataset]
@@ -323,7 +320,7 @@ Historical observations are necessary for labels and evaluation, but there is no
 
 | Layer | Implementation |
 | --- | --- |
-| Runtime and data | Python 3.11; xarray, cfgrib/ecCodes, NumPy, pandas, PyArrow/Parquet. |
+| Runtime and data | Python 3.11 or 3.12; xarray, cfgrib/ecCodes, NumPy, pandas, PyArrow/Parquet. |
 | Learning | LightGBM; scikit-learn calibration/evaluation utilities; saved model contributions. |
 | API | FastAPI, Pydantic, Uvicorn, OpenAPI. |
 | Frontend | Vite, locally bundled Leaflet, plain JavaScript/CSS. |
@@ -331,7 +328,7 @@ Historical observations are necessary for labels and evaluation, but there is no
 | Quality | pytest, Ruff, Make commands, manifests, checksums, frozen configuration, Git history. |
 
 The actual replay service loads a reviewed compressed replay asset; SQLite is
-used for acquisition state, not the current replay database. Local map geometry
+used only for acquisition state, not for the replay. Local map geometry
 and bundled web dependencies allow prepared replay without external map tiles or
 a CDN. Initial dependency and data acquisition still require network access.
 
@@ -361,7 +358,7 @@ The climatology comparator estimates training-era bust frequency by region, seas
 
 Saved LightGBM `pred_contrib=True` outputs describe contributions to the raw tree score. They are **not percentage-point effects on the calibrated probability**, nor proof of meteorological causation. The current display groups control rainfall, regional context, and lead/season evidence under decision D-009.
 
-There is no integrated generative-LLM reasoning layer. The evidence is numerical attribution and historical retrieval, not an autonomous meteorologist or generated causal diagnosis.
+The evidence is numerical attribution and historical retrieval. No language model generates the explanations.
 
 ### Earlier comparable cases
 
@@ -404,10 +401,6 @@ The recorded evaluation does not establish spread-only skill, PR-AUC, alert-budg
 | The replay exposes scores, source windows, and model evidence for a small frozen set of test dates. | A claim that every date in the decade can be browsed or that the model is validated for live use. |
 | The study follows a chronological train/validation/test design and retains unsupported states as no-data. | A claim of perfect calibration, independent storm-level samples, or statistical significance from row count alone. |
 
-This distinction is intentional: a strong research submission makes its
-demonstrable contribution clear without extending its conclusions beyond the
-available evidence.
-
 ### Result identity
 
 ```text
@@ -431,9 +424,9 @@ The underlying records include:
 
 The compressed replay bundle and its metadata are committed so readers can run
 the prepared historical replay from a normal clone. Training, metrics, and
-uncompressed generated artifacts remain local. The recorded run includes a dirty
-worktree at commit `356f599`; it should not be described as training from a
-pristine tagged release. Replay export checks the manifest fingerprint and saved
+uncompressed generated artifacts remain local. The recorded run was made from
+commit `356f599` with uncommitted local changes, so it should not be described
+as training from a clean tagged release. Replay export checks the manifest fingerprint and saved
 Booster hash before using test rows; it neither trains the candidate nor refits
 calibration.
 
@@ -460,7 +453,7 @@ Day-6 accumulation arithmetic:
 (120-126)-(120-123)+(126-132)+(132-138)+(138-144)+(144-147)
 ```
 
-The leading difference isolates +123–+126 hours; the remaining intervals complete +123–+147 hours. The largest positive saved score contribution in this case is forecast rainfall. One of the five displayed earlier analogs is a bust; their fraction is not the source of the 65.44% classifier probability.
+The leading difference isolates +123–+126 hours; the remaining intervals complete +123–+147 hours. The largest positive saved score contribution in this case is forecast rainfall. One of the five displayed earlier analogs is a bust; that one-in-five fraction is not the source of the 65.44% classifier probability.
 
 This is a reproducible illustration, not a preregistered representative event or proof of overall skill. The regional totals do not establish a storm track, displacement distance, flood impact, or physical cause.
 
@@ -472,7 +465,7 @@ The dashboard starts with a research-scope acknowledgement and identifies the re
 
 The inspector brings together decimal probability, threshold, exact UTC interval, coverage, forecast-versus-observation values, per-lead trajectory, score contributions, earlier cases, and provenance. The trust panel displays aggregate Brier/reliability evidence and the unavailable spread-only baseline. Corpus, roadmap, scope, and API documentation surfaces provide supporting context.
 
-The exported slice contains **2018-01-01, 2019-01-01, and 2019-12-31**: the first, chronological-middle, and last available held-out initialization. Its **3,360 records** equal three dates × 112 regions × ten leads. This small replay is not an arbitrary-date browser over the entire decade.
+The exported slice contains **2018-01-01, 2019-01-01, and 2019-12-31**: the first, chronological-middle, and last available held-out initializations. Its **3,360 records** equal three dates × 112 regions × ten leads. This small replay is not an arbitrary-date browser over the entire decade.
 
 Unavailable windows and regions remain null/gray, not low-risk. Illustrative ensemble/moisture/circulation cards preview future interface behavior and do not contribute to probabilities. Decorative flow/glow effects are not wind measurements or atmospheric simulations.
 
@@ -500,8 +493,8 @@ The completed dataset additionally carries `split`. UTC timestamps and `window_q
 
 ### Reviewer walkthrough
 
-For a focused live review, select the 2019-12-31 initialization and open region
-R28N-094E at Day 6. The interface presents the 65.44% recorded bust
+For a focused live review, use the *Featured held-out case* button, or select the
+2019-12-31 initialization and open region R28N-094E at Day 6. The interface presents the 65.44% recorded bust
 probability, the issued control-forecast total, the later IMD total, the
 region-specific threshold, the exact UTC window, model-score contributions, and
 strictly earlier comparable cases. The same case is documented in [§10](#10-a-worked-historical-example);
@@ -523,33 +516,26 @@ cross-checking.
 | `scripts/` | Reproducible command entry points. |
 | `tests/` | Data, leakage, model, and API contract tests. |
 | `web/` | Vite/Leaflet frontend and local assets. |
-| `data/raw/`, `data/interim/`, `data/processed/` | Local, ignored source/intermediate/derived data. |
-| `artifacts/model/`, `artifacts/metrics/` | Local, ignored generated model and evaluation assets. |
+| `data/raw/`, `data/interim/`, `data/processed/` | Local, Git-ignored source, intermediate, and derived data. |
+| `artifacts/model/`, `artifacts/metrics/` | Local, Git-ignored generated model and evaluation assets. |
 | `artifacts/replay/` | Bundled compressed replay and metadata, plus local regenerated exports. |
-| `assets/screenshots/`, `submission/`, `slides/`, `demo/` | Homes for reviewed presentation and submission material; folder existence is not release completion. |
+| `assets/screenshots/`, `submission/` | Dashboard screenshots, and the presentation and demo video links. |
 
 ### Setup
 
-Python 3.11 and Node 20+ are the documented starting environment:
+The documented environment is Python 3.11 or 3.12, Node.js 20+, and `make`, the same as the [README quick start](../README.md#run-the-replay):
 
 ```sh
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 make web
-make smoke
+make api
 ```
 
 The repository supplies dependency declarations/lock information and `environment.yml`. Where GRIB bindings are difficult to install, the conda-forge alternative is `conda env create -f environment.yml`, followed by `conda activate synoptiq`.
 
-A clone contains the reviewed compressed replay bundle, but not the raw training corpus. Serve it using:
-
-```sh
-source .venv/bin/activate
-REPLAY_ASSET_PATH=artifacts/replay/reduced_c00_replay.json.gz API_PORT=8001 make api
-```
-
-The dashboard is then at `http://127.0.0.1:8001/`. The service requires a real replay asset; without one it fails at startup with the required path.
+A clone contains the reviewed compressed replay bundle, but not the raw training corpus. `make api` serves that bundle by default, and the dashboard is then at `http://127.0.0.1:8000/`. A different replay file or port can be chosen with `REPLAY_ASSET_PATH` and `API_PORT`. The service requires a real replay asset; without one it stops at startup and reports the expected path. Windows setup options are listed in the README.
 
 | Command | Current purpose |
 | --- | --- |
@@ -580,9 +566,9 @@ The project then evolved through these decisions:
 | D-007 | 2026-09-27 | Active verification-only IMD 2020 addition; no extra forecast years or changed split. Per-row interval arithmetic controls the exact January dates. |
 | D-008 | 2026-09-27 | Approved reduced c00-only release; full physical/ensemble groups deferred. Does not change labels, splits, regions, or timing. A full-feature successor needs new evidence. |
 | D-009 | 2026-09-27 | `forecast_control` and `regional_context` evidence groups added for D-008 only; no new predictor or causal claim. |
-| D-010 | 2026-09-28 | Submission/screenshots homes and documentation reorganization. Its original root-AGENTS exception was superseded by later relocation and this owner-requested consolidation. |
+| D-010 | 2026-09-28 | Added submission and screenshot folders and reorganized the documentation, later consolidated into this reference. |
 
-**Documentation consolidation, 28 September 2026:** this file now holds the reader-facing decisions, audit evidence, method, results, milestones, and release requirements. The owner requested removal of the separate source Markdown files after merging. No scientific policy or acceptance status changed as a consequence.
+**Documentation consolidation, 28 September 2026:** this file now holds the decisions, audit evidence, method, results, milestones, and release requirements. The separate source documents were removed after merging. No scientific policy or acceptance status changed as a result.
 
 ### Recorded milestones
 
@@ -605,7 +591,7 @@ The project then evolved through these decisions:
 | D3-04 | Open | Reviewed changes merged and release/assets tagged `submission-freeze`, with no unverified feature or metric. |
 | D3-05 | Open | Final deck/video links opened on a second device, rehearsal/export blockers resolved, submission receipt saved. |
 
-The formal first three phases are recorded as complete; the trust/demo/submission phase remains open. The plan's 27–29 September timetable was a planning assumption, not verified evidence of an official portal deadline. Its role placeholders are historical accountability assignments, not proof that each named person performed every task.
+The first three phases are recorded as complete; at this snapshot, the trust, demonstration, and submission phase was still open. The plan's 27–29 September timetable was a planning assumption, not verified evidence of an official portal deadline.
 
 Older “blocked” or “recording pending” paragraphs remain recoverable in Git history. This overview uses later completion entries where available rather than treating all historical status statements as simultaneous.
 
@@ -624,13 +610,13 @@ The lasting release requirements are:
 - **Distribution:** current provider terms and third-party asset attribution checked; no raw archives, credentials, virtual environments, or large recordings committed.
 - **Acceptance:** final release/assets frozen, presentation/video links opened on another device, and submission receipt retained when applicable.
 
-The source manifest and historical run records preserve what was actually attempted and produced. Source, threshold, time-window, split, grid, or feature changes are recorded as decisions rather than silently changing the meaning of existing results. Missing dates are not filled with fabricated forecasts; an incomplete gate remains blocked until the replay is available.
+The source manifest and historical run records preserve what was actually attempted and produced. Source, threshold, time-window, split, grid, or feature changes are recorded as decisions rather than silently changing the meaning of existing results. Missing dates are not filled with fabricated forecasts; an incomplete gate stays blocked until its evidence exists.
 
 ### Continuing the evidence record
 
 With the separate Markdown records consolidated, future material decisions belong in this document's decision history and results belong alongside their dated artifact identities. A reproducibility entry records the actual command, code state, manifest/hash, split, seed, output location, observed outcome, remaining limitation, and acceptance ticket. Source-object evidence remains in `DATA_MANIFEST.csv`; absence is not proof of either success or failure.
 
-The inherited status vocabulary is **✅ Complete** for evidenced acceptance, **⚠️ Blocked — needs human** for missing dependencies/evidence with an explicit fallback, and **❌ Failed** for a real unsuccessful attempt. Writing a plan or compiling this document does not satisfy a gate. Raw metadata, GRIB values, file contents, checksums, or command output are never invented; cited historical evidence is distinguished from a newly executed check.
+The status vocabulary is **Complete** for evidenced acceptance, **Blocked** for missing dependencies or evidence with an explicit fallback, and **Failed** for a real unsuccessful attempt. Writing a plan or compiling this document does not satisfy a gate. Raw metadata, GRIB values, file contents, checksums, or command output are never invented; cited historical evidence is distinguished from a newly executed check.
 
 If leakage or invalid timing is discovered, affected rows, metrics, and presentation claims must be invalidated and rebuilt from permitted data. If a source becomes unavailable, a different forecast/reference is a documented research change, not an invisible download fallback. Small reviewed changes preserve schema and artifact compatibility, while `.gitignore` protects raw data and secrets.
 
@@ -642,12 +628,12 @@ The roadmap is dependency-driven, not a promise that adding a data field will im
 
 ### Complete the present release
 
-Finish D3-01–D3-05 against the current reduced model: reconcile score/tier captions, audit explanations, finalize recordings and result text, verify asset terms, reproduce the real replay on another machine, and freeze the package. UI polish must not blur the distinction between active evidence and illustrative future panels.
+Finish the remaining release checks against the current reduced model: reconcile score/tier captions, audit explanations, verify asset terms, reproduce the real replay on another machine, and freeze the package. UI polish must not blur the distinction between active evidence and illustrative future panels.
 
 ### Expand the scientific candidate
 
 1. **Acquire the missing corpus:** complete p01–p04 rainfall and selected atmospheric fields through the resumable pipeline, preserving source identities, units, grids, and exact intervals.
-2. **Resolve feature definitions:** choose actual available humidity/wind/pressure/height quantities and build the intended named physical and ensemble summaries. The present documents differ on specific versus relative humidity and on wind level; these are unresolved design details, not acquired predictors.
+2. **Resolve feature definitions:** choose actual available humidity/wind/pressure/height quantities and build the intended named physical and ensemble summaries. The original design documents differ on specific versus relative humidity and on wind level; these are unresolved design details, not acquired predictors.
 3. **Strengthen the analog model:** move beyond scalar rainfall similarity to audited multivariable forecast patterns; investigate earlier analog-error summaries as predictors using training-only transformations and query-safe chronology.
 4. **Compare justified alternatives:** implement spread-only predictions, evaluate proposed weighting choices, and ablate physical and analog features against simpler models.
 5. **Broaden evaluation:** report PR-AUC, recall at the planned top-10% regional-alert budget, lead/season slices, reliability counts, and week/episode-block uncertainty where supported. Investigate 5/10/20 mm floor and spatial-displacement sensitivity without silently replacing the main target.
@@ -695,32 +681,30 @@ The present model establishes a narrow but real historical result. Important lim
 Two presentation/design inconsistencies remain explicit:
 
 - **Risk tiers:** the recorded exporter/legend uses low below 30%, watch 30–<50%, and high ≥50%; the original reference proposed a 20% low/watch boundary. This document reports the discrepancy without approving a policy change. Numeric probability is the underlying output; tiers are not official warnings.
-- **Phase naming:** some UI wording calls atmospheric expansion “Phase 4,” while the formal fourth phase is trust, demonstration, and submission. “Future feature expansion” is the unambiguous description of deferred atmospheric work.
+- **Phase naming:** in the original plan, “Phase 4” means trust, demonstration, and submission. Deferred atmospheric work is described here as future feature expansion to avoid confusing the two.
 
-Older records also retain stale pending statuses, root-document paths, and an overextended January endpoint in D-007. The adopted interval formula and exact per-row UTC bounds determine verification dates; inclusion of IMD 2020 does not expand the initialization years. These historical wording inconsistencies should not become new scientific assumptions.
+The adopted interval formula and exact per-row UTC bounds determine verification dates; including IMD 2020 does not add initialization years.
 
 If a future version fails to improve on a simpler baseline, the result remains worth reporting as a diagnostic finding. A working interface, an appealing explanation, or one successful example is not a substitute for aggregate validation.
 
 ## 17. Team
 
-**HackTastic 6ix**
+**HackTastic 6ix** · Team ID 178497
 
-| Member | GitHub |
-| --- | --- |
-| Kanishka Pandey | [kan9667](https://github.com/kan9667) |
-| Aanya Varshney | [aanyavarshneyav](https://github.com/aanyavarshneyav) |
-| Rudraksh Saini | [Rudrakssh](https://github.com/Rudrakssh) |
-| Dhruv Makkar | [dhruvsded1](https://github.com/dhruvsded1) |
-| Aadi Jain | [DeltaData0](https://github.com/DeltaData0) |
-| Triman Singh Chadha | [Triman01](https://github.com/Triman01) |
-
-This identifies the team without attributing unverified individual implementation contributions. The original A–F assignments are retained in the implementation history.
+| Member | Role | GitHub |
+| --- | --- | --- |
+| Kanishka Pandey | Data lead | [kan9667](https://github.com/kan9667) |
+| Aanya Varshney | Verification lead | [aanyavarshneyav](https://github.com/aanyavarshneyav) |
+| Rudraksh Saini | Machine-learning lead | [Rudrakssh](https://github.com/Rudrakssh) |
+| Dhruv Makkar | Features and explainability lead | [dhruvsded1](https://github.com/dhruvsded1) |
+| Aadi Jain | Product lead | [DeltaData0](https://github.com/DeltaData0) |
+| Triman Singh Chadha | Integration and communications lead | [Triman01](https://github.com/Triman01) |
 
 ## 18. Research and project records
 
 ### Primary research and data references
 
-These sources support the data and methodological background, not Synoptiq's measured performance. Links and source interpretations are carried forward from the research/audit documents; they were not newly checked for current product or licensing changes during this consolidation.
+These sources support the data and methodological background, not Synoptiq's measured performance. Source interpretations are carried forward from the research and audit documents. Links were rechecked in October 2026; current product and licensing terms were not re-reviewed.
 
 - NOAA/AWS: [GEFSv12 reforecast archive](https://registry.opendata.aws/noaa-gefs-reforecast/) and [data description](https://noaa-gefs-retrospective.s3.amazonaws.com/Description_of_reforecast_data.pdf).
 - Guan et al.: [GEFSv12 reforecast dataset paper](https://repository.library.noaa.gov/view/noaa/53301).
@@ -737,12 +721,12 @@ Additional sources retained for the research extensions and source-selection rat
 | --- | --- |
 | IMD file alternative | [Official binary rainfall specification](https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_Bin.html); alternative encoding still needs a decode/time audit. |
 | GEFS relevance in India | [GEFSv12 monsoon evaluation](https://journals.ametsoc.org/view/journals/wefo/37/7/WAF-D-21-0184.1.xml); prior research, not Synoptiq validation. |
-| Spatial rain verification | NCMRWF [2018 CRA report](https://www.ncmrwf.gov.in/Reports-eng/MoES_MFV_CRA_Monsoon2018.pdf) and [2024 verification report](https://www.ncmrwf.gov.in/Reports-eng/NCUMG_MAM2024.pdf). |
-| Institutional model configuration | [NCUM technical description](https://www.ncmrwf.gov.in/ncmrwf/NCUM-Writeup.pdf) and [implementation report](https://www.ncmrwf.gov.in/Reports-eng/New_NCUM-Implementation_Report.pdf); configurations are time-specific. |
+| Spatial rain verification | Ashrit et al., [Performance of NCMRWF unified model during the southwest monsoon 2018](https://www.researchgate.net/publication/343988410_Performance_of_NCMRWF_unified_model_during_the_southwest_monsoon_2018), in *Monsoon 2018: A Report* (2019); NCMRWF 2024 NCUM verification report. |
+| Institutional model configuration | NCMRWF technical reports [NCUM Global NWP System: Version 6 (NCUM-G:V6)](https://doi.org/10.64349/nmrf.tr.6.2020) and [Implementation of New High Resolution NCUM Analysis-Forecast System in Mihir HPCs](https://doi.org/10.64349/nmrf.tr.1.2018); configurations are time-specific. |
 | TIGGE access and identity | [Provider licence](https://cds.climate.copernicus.eu/licences/tigge-licence) and [contributing-model table](https://confluence.ecmwf.int/spaces/TIGGE/pages/40109876/Models); centre-specific restrictions and archived configurations. |
 | ERA5 context | [Single-level catalogue](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview), [pressure-level catalogue](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview), and [CDS API setup](https://cds.climate.copernicus.eu/how-to-api). |
 | IMDAA context | [NCMRWF overview](https://nwp.ncmrwf.gov.in/reanalysis), [Rani et al. study](https://journals.ametsoc.org/view/journals/clim/34/12/JCLI-D-20-0412.1.xml), and [access registration](https://rds.ncmrwf.gov.in/register); portal and paper periods differ, so actual coverage needs checking. |
-| Separate heat task | [IMD Tmax catalogue](https://imdpune.gov.in/cmpg/Griddata/Max_1_Bin.html) and [IMD criteria material](https://mausam.imd.gov.in/met-oly/Met-Olympiad-Study-Material-Senior.pdf). |
+| Separate heat task | [IMD Tmax catalogue](https://imdpune.gov.in/cmpg/Griddata/Max_1_Bin.html); a heat task would also need IMD's official heat-wave criteria. |
 | Separate cyclone task | [IMD RSMC best-track archive](https://rsmcnewdelhi.imd.gov.in/report.php?internal_menu=MzM). |
 | Alternative precipitation reference | NASA [IMERG products](https://gpm.nasa.gov/data/imerg) and [product FAQ](https://gpm.nasa.gov/data/faq); product/latency selection matters. |
 | Recent versus historical forecasts | [ECMWF open data](https://www.ecmwf.int/en/forecasts/datasets/open-data) and [NOAA GFS archive/access table](https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast); neither is the chosen GEFS reforecast corpus. |
@@ -751,7 +735,7 @@ The earlier literature notes also listed IndiaWeatherBench, BharatBench, GraphCa
 
 ### Underlying project history
 
-This is the maintained, reader-facing project document. The separate Markdown sources were consolidated and removed at the owner's request. Their original wording and dated execution detail remain recoverable from the [pre-consolidation documentation snapshot](https://github.com/kan9667/synoptiq/tree/deadd86e18581b85ab61b388e1456a1f0f16ef7d/docs). The renamed `Canonical-Reference.md` was byte-identical to the older long-named canonical reference in that snapshot.
+This is the maintained project reference. It consolidates the earlier separate planning and audit documents, whose original wording and dated detail remain available in the [earlier documentation snapshot](https://github.com/kan9667/synoptiq/tree/deadd86e18581b85ab61b388e1456a1f0f16ef7d/docs).
 
 | Former record | Consolidated home |
 | --- | --- |
@@ -761,8 +745,8 @@ This is the maintained, reader-facing project document. The separate Markdown so
 | Data audit | §§5–6: signed timing interpretation, real arithmetic, source identities, region checks, build safeguards, and completion evidence. |
 | Method and results | §§4, 8–10: label/model protocol, calibrated and uncalibrated results, artifact identities, and worked example. |
 | Run log | §§6, 9, 13–14: key execution outcomes, milestone status, reproducibility, and ongoing record format; full command history in Git. |
-| Agent contract and roadmap | §§11–14: schema, quality safeguards, exact ticket identities, and evidence-led completion; agent-session instructions are not the reader-facing format. |
+| Contributor guide and roadmap | §§11–14: schema, quality safeguards, milestone identities, and evidence-led completion. |
 | Release checklist | §14: attribution, fresh-clone/second-machine verification, matching assets, and submission acceptance. |
 | Earlier complete handoff | §§3, 9–12, 15–17: state, result identity, product/example, local use, future work, and team. |
 
-As Synoptiq develops, this reference can evolve with it: retain dated result identities, explain material design changes, and keep implemented capabilities distinct from research proposals. The project's durable core is not a particular dashboard or model version—it is a reproducible answer to a clearly defined forecast-reliability question.
+As Synoptiq develops, this reference can evolve with it: retain dated result identities, explain material design changes, and keep implemented capabilities distinct from research proposals. Its lasting value is a reproducible answer to a clearly defined forecast-reliability question, independent of any one dashboard or model version.
